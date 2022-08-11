@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">MnemoList</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add">add</string>
+    <string name="list_profiles">Список профилей</string>
+    <string name="create_note">Создать уведомлени</string>
+    <string name="done">done</string>
+    <string name="enter_name_profile">Введите имя профиля</string>
+    <string name="enter_name_profile_helper_text">имя профиля обязательно</string>
+    <string name="enter_location_helper_text">локация обязательна</string>
+    <string name="minute">минут</string>
+    <string name="hour">часов</string>
+    <string name="day">дней</string>
+    <string name="week">недель</string>
+    <string name="month">месяцев</string>
+    <string name="add_timestamp_button">добавить временную метку</string>
+    <string name="enter_location_note_string">Введите локацию</string>
+    <string name="last_notification_title">Больше нет времменных меток</string>
+    <string name="profile_item_separator">/</string>
+    <string name="delete_note_title_dialog_fragment">Удаление записи</string>
+    <string name="delete_note_message_dialog_fragment">Удалить запись?</string>
+    <string name="no">Нет</string>
+    <string name="yeas">Да</string>
+    <string name="description_note_dialog_title">Подсказака к записи:</string>
+    <string name="ok">Ok</string>
+</resources>
