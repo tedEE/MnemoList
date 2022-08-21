@@ -40,7 +40,7 @@ fun sendNotification(messageTitle: String, messageBody: String, noteId: Int, app
     val remember = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_remember)
 
     val proceedIntent = Intent(applicationContext, RepetitionNotificationReceiver::class.java).let { intent ->
-        intent.putExtra("note_id", noteId)
+        intent.putExtra(RepetitionNotificationReceiver.NOTE_ID, noteId)
         PendingIntent.getBroadcast(applicationContext,
             noteId,
             intent,

@@ -113,7 +113,7 @@ class CreateNoteFragment :
             )
             /////////////////////////////
             mCreateNoteViewModel.mNoteIdLiveData.observe(viewLifecycleOwner, Observer {
-                MakeAlarmWorker.create(requireContext(), it)
+                MakeAlarmWorker.create(requireContext(), intArrayOf(it), MakeAlarmWorker.LAUNCH_CREATION)
             })
         }
     }

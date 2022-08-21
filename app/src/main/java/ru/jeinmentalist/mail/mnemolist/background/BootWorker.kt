@@ -12,6 +12,7 @@ import ru.jeinmentalist.mail.data.note.NoteRepositoryImpl
 import ru.jeinmentalist.mail.domain.note.noteUseCase.GetPerformedNotesUseCase
 import ru.jeinmentalist.mail.domain.type.None
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.sendNotification
+import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
 import ru.jeinmentalist.mail.mnemolist.base.BaseWorker
 
 @HiltWorker
@@ -22,21 +23,14 @@ class BootWorker @AssistedInject constructor(
 ) : BaseWorker(context, workerParameters) {
 
     override fun resultSuccess() {
-        sendNotification("BootWorker", "ребут устройства", 9999,  applicationContext)
+        showLog("BootWorker")
         getPerformedNotes(None()){
             it.either(::handleFailure, ::makeAlarm)
         }
     }
 
     fun makeAlarm(list: List<Int>){
-        list.map {
-            MakeAlarmWorker.create(applicationContext, it)
-//            val workManager = WorkManager.getInstance(applicationContext)
-//            workManager.enqueueUniqueWork(
-//                MakeAlarmWorker.WORK_NAME,
-//                ExistingWorkPolicy.APPEND_OR_REPLACE,
-//                MakeAlarmWorker.makeRequest(it))
-        }
+        MakeAlarmWorker.create(applicationContext, list.toIntArray(), MakeAlarmWorker.LAUNCH_REBOOT)
     }
     companion object {
         const val WORK_NAME = "BootWorker"

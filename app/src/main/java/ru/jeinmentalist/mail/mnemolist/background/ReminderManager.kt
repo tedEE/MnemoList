@@ -5,11 +5,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import ru.jeinmentalist.mail.domain.note.Note
+import ru.jeinmentalist.mail.mnemolist.background.reminder.IReminderManager
 
 object ReminderManager {
     const val REMINDER_NOTIFICATION_REQUEST_CODE = 123
 
-    fun startReminder(
+     fun startReminder(
         context: Context,
         reminderTime: Long,
         note: Note,

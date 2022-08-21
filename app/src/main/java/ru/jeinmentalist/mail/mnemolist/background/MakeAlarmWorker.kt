@@ -1,13 +1,11 @@
 package ru.jeinmentalist.mail.mnemolist.background
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import ru.jeinmentalist.mail.domain.note.Note
-import ru.jeinmentalist.mail.domain.note.noteUseCase.CheckNoteForExistenceUseCase
 import ru.jeinmentalist.mail.domain.note.noteUseCase.GetNoteByIdUseCase
 import ru.jeinmentalist.mail.domain.note.noteUseCase.UpdateNoteExecutableTimestampUseCase
 import ru.jeinmentalist.mail.domain.note.noteUseCase.UpdateNoteStateUseCase
@@ -29,25 +27,52 @@ class MakeAlarmWorker @AssistedInject constructor(
     val mChangeCompletedEntries: ChangeCompletedEntriesUseCase
 ) : BaseWorker(context, workerParameters) {
 
+    private var lch: Int = 0
+
     override fun resultSuccess() {
-        val id = workerParameters.inputData.getInt(ID, 0) // пример передачи данных
-        mGetNoteById(GetNoteByIdUseCase.Params(id)) {
-            it.either(::handleFailure, ::handleNote)
+        val ids = workerParameters.inputData.getIntArray(IDS)
+        lch = workerParameters.inputData.getInt(LAUNCH, 0)
+        ids?.map { id: Int ->
+            mGetNoteById(GetNoteByIdUseCase.Params(id)) {
+                it.either(::handleFailure, ::handleNote)
+            }
         }
     }
 
     private fun handleNote(note: Note) {
         if (note.state != Note.DONE) {
-            createNotification(note)
+//            createNotification(note)
             getListTimestamp(note) { listTimestamp: List<Long> ->
                 val sortList = listTimestamp.sorted()
                 // сдесь переодически падает изза пустого листа
-                showLog(listTimestamp.toString())
-                if (note.executableTimestamp == sortList.last()) {
-                    changeNoteState(note)
-                } else {
-                    changeExecutableTimestamp(note, sortList)
+                when(lch){
+                    LAUNCH_CREATION -> {
+                        notificationHandler(note, sortList)
+//                        createNotification(note)
+                        changeExecutableTimestamp(note, sortList)
+                    }
+                    LAUNCH_REPETITION -> {
+                        notificationHandler(note, sortList)
+//                        createNotification(note)
+                        if (note.executableTimestamp == sortList.last()) {
+                            changeNoteState(note)
+                        } else {
+                            changeExecutableTimestamp(note, sortList)
+                        }
+                    }
+                    LAUNCH_REBOOT -> {
+                        notificationHandler(note, sortList)
+//                        createNotification(note)
+                    }
                 }
+
+                showLog(note.toString())
+//                if (note.executableTimestamp == sortList.last()) {
+//                    changeNoteState(note)
+//                } else {
+//                    if (lch == LAUNCH_REPETITION)
+//                        changeExecutableTimestamp(note, sortList)
+//                }
             }
         } else {
             changeCompletedEntries(note)
@@ -77,34 +102,47 @@ class MakeAlarmWorker @AssistedInject constructor(
         mUpdateNoteState(UpdateNoteStateUseCase.Param(note.noteId, Note.DONE))
     }
 
-    private fun changeCompletedEntries(note: Note){
+    private fun changeCompletedEntries(note: Note) {
         mChangeCompletedEntries(CounterEntriesParams(note.profId))
     }
 
-    private fun createNotification(note: Note) {
+    private fun notificationHandler(note: Note, timestampList: List<Long>){
+        val rebootTimestamp: Long = (timestampList.indexOf(note.executableTimestamp) - 1).toLong()
+        if (lch == LAUNCH_REBOOT){
+            createNotification(rebootTimestamp, note)
+        }else{
+            createNotification(note.timeOfCreation.toLong() + note.executableTimestamp, note)
+        }
+    }
+    private fun createNotification(timestamp: Long, note: Note) {
         ReminderManager.startReminder(
             applicationContext,
-            note.timeOfCreation.toLong() + note.executableTimestamp,
+            timestamp,
             note
         )
     }
 
     companion object {
-        const val ID = "id_note_MakeFirstNotificationWorker"
+        const val IDS = "id_note_MakeFirstNotificationWorker"
         const val WORK_NAME = "MakeFirstNotificationWorker"
 
-        fun create(context: Context, id: Int) {
+        const val LAUNCH_REBOOT = 1
+        const val LAUNCH_CREATION = 2
+        const val LAUNCH_REPETITION = 3
+        const val LAUNCH = "launch"
+
+        fun create(context: Context, ids: IntArray, launch: Int) {
             val workManager = WorkManager.getInstance(context)
             workManager.enqueueUniqueWork(
                 WORK_NAME,
                 ExistingWorkPolicy.APPEND_OR_REPLACE,
-                makeRequest(id)
+                makeRequest(ids, launch)
             )
         }
 
-        private fun makeRequest(id: Int): OneTimeWorkRequest {
+        private fun makeRequest(ids: IntArray, launch: Int): OneTimeWorkRequest {
             return OneTimeWorkRequestBuilder<MakeAlarmWorker>()
-                .setInputData(workDataOf(ID to id))
+                .setInputData(workDataOf(IDS to ids, LAUNCH to launch))
 //                .setConstraints(makeConstrains()) задать ограничения
                 .build()
         }
