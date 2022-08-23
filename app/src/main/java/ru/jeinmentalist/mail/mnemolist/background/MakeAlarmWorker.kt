@@ -15,6 +15,7 @@ import ru.jeinmentalist.mail.domain.timestamp.timstampUseCase.LoadTimestampListU
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.sendLastNotification
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
 import ru.jeinmentalist.mail.mnemolist.base.BaseWorker
+import java.util.*
 
 @HiltWorker
 class MakeAlarmWorker @AssistedInject constructor(
@@ -45,7 +46,7 @@ class MakeAlarmWorker @AssistedInject constructor(
             getListTimestamp(note) { listTimestamp: List<Long> ->
                 val sortList = listTimestamp.sorted()
                 // сдесь переодически падает изза пустого листа
-                when(lch){
+                when (lch) {
                     LAUNCH_CREATION -> {
                         notificationHandler(note, sortList)
 //                        createNotification(note)
@@ -66,7 +67,6 @@ class MakeAlarmWorker @AssistedInject constructor(
                     }
                 }
 
-                showLog(note.toString())
 //                if (note.executableTimestamp == sortList.last()) {
 //                    changeNoteState(note)
 //                } else {
@@ -106,14 +106,21 @@ class MakeAlarmWorker @AssistedInject constructor(
         mChangeCompletedEntries(CounterEntriesParams(note.profId))
     }
 
-    private fun notificationHandler(note: Note, timestampList: List<Long>){
-        val rebootTimestamp: Long = (timestampList.indexOf(note.executableTimestamp) - 1).toLong()
-        if (lch == LAUNCH_REBOOT){
+    private fun notificationHandler(note: Note, timestampList: List<Long>) {
+        if (lch == LAUNCH_REBOOT) {
+            val rebootTimestamp: Long =
+                (timestampList[timestampList.indexOf(note.executableTimestamp) - 1]) + note.timeOfCreation.toLong()
+            showLog("rebootTimestamp : $rebootTimestamp")
             createNotification(rebootTimestamp, note)
-        }else{
+        } else {
             createNotification(note.timeOfCreation.toLong() + note.executableTimestamp, note)
+            val date = Date(note.timeOfCreation.toLong() + note.executableTimestamp)
+            val calendar = Calendar.getInstance()
+            calendar.time = date
+            showLog("часов : ${calendar.get(Calendar.HOUR_OF_DAY)}")
         }
     }
+
     private fun createNotification(timestamp: Long, note: Note) {
         ReminderManager.startReminder(
             applicationContext,

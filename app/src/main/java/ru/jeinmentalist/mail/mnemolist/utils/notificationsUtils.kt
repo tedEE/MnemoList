@@ -123,7 +123,7 @@ fun sendLastNotification(applicationContext: Context) {
 
     val builder = NotificationCompat.Builder(
         applicationContext,
-        "exampleServiceChannel"
+        App.CHANNEL_ID
     )
         .setSmallIcon(R.drawable.ic_remember__1_)
         .setStyle(bigPicStyle)
@@ -143,8 +143,8 @@ fun createNotificationChannel(context: Context, channelId: String, channelName: 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val notificationChannel = NotificationChannel(
             channelId,
-            channelName,
-            NotificationManager.IMPORTANCE_DEFAULT
+            channelName, // название которое увидит пользователь
+            NotificationManager.IMPORTANCE_DEFAULT // настройка важности уведомления
         )
 
         // включение светодиода
@@ -153,7 +153,7 @@ fun createNotificationChannel(context: Context, channelId: String, channelName: 
         notificationChannel.lightColor = Color.RED
         // включить вибрацию
         notificationChannel.enableVibration(true)
-        notificationChannel.description = "Mnemo list"
+        notificationChannel.description = "Mnemo list" // описание канала которое увидит пользователь
         val manager = context.getSystemService(
             NotificationManager::class.java
         )
