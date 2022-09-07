@@ -3,6 +3,8 @@ package ru.jeinmentalist.mail.mnemolist.utils
 import android.animation.*
 import android.view.View
 import android.view.ViewAnimationUtils
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
@@ -45,6 +47,7 @@ fun View.startCircularReveal(x: Int, y: Int, animator: ObjectAnimator?) {
                 .apply {
                     interpolator = DecelerateInterpolator(2f)
                     duration = durationAnim
+//                    addListener()
                     start()
                     animator?.start()
                 }

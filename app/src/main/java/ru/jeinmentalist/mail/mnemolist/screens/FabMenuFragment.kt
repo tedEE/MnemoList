@@ -2,12 +2,15 @@ package ru.jeinmentalist.mail.mnemolist.screens
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
+import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mentalist.databinding.FragmentFabMenuBinding
 import ru.jeinmentalist.mail.mnemolist.base.BaseFragment
 import ru.jeinmentalist.mail.mnemolist.contract.FirstFragment
 import ru.jeinmentalist.mail.mnemolist.contract.Options
 import ru.jeinmentalist.mail.mnemolist.utils.ExitWithAnimation
 import ru.jeinmentalist.mail.mnemolist.utils.exitCircularReveal
+import ru.jeinmentalist.mail.mnemolist.utils.startBackgroundColorAnimation
 import ru.jeinmentalist.mail.mnemolist.utils.startCircularReveal
 
 
@@ -33,9 +36,14 @@ class FabMenuFragment : BaseFragment<FragmentFabMenuBinding>(FragmentFabMenuBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.background.background = null
+        binding.noBackground.background = null
         view.visibility = View.VISIBLE
-        view.startCircularReveal(posX!!, posY!!, null)
+        val animator = binding.background.startBackgroundColorAnimation(
+            ContextCompat.getColor(requireContext(), R.color.background_menu_from),
+            ContextCompat.getColor(requireContext(), R.color.background_menu_to),
+            1300
+        )
+        view.startCircularReveal(posX!!, posY!!, animator)
 
         binding.createProfile.setOnClickListener {
             (parentFragment as FirstFragment).createProfile()

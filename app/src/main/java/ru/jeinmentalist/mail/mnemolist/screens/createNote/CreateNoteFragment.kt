@@ -45,7 +45,7 @@ class CreateNoteFragment :
         val animator = binding.rootCreateNote.startBackgroundColorAnimation(
             ContextCompat.getColor(requireContext(), R.color.purple_500),
             ContextCompat.getColor(requireContext(), R.color.ic_launcher_background),
-            1500
+            1000
         )
         view.startCircularReveal(posX!!, posY!!, animator)
 

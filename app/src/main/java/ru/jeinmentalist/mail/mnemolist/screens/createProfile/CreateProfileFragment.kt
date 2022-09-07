@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.jeinmentalist.mail.domain.timestamp.Timestamp
 import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mentalist.databinding.FragmentCreateProfileBinding
+import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showToast
 import ru.jeinmentalist.mail.mnemolist.base.BaseFragment
 import ru.jeinmentalist.mail.mnemolist.contract.CustomAction
@@ -54,7 +55,7 @@ class CreateProfileFragment : BaseFragment<FragmentCreateProfileBinding>(
         val animator = binding.scrollView.startBackgroundColorAnimation(
             ContextCompat.getColor(requireContext(), R.color.purple_500),
             ContextCompat.getColor(requireContext(), R.color.ic_launcher_background),
-            1500
+            1000
         )
         view.startCircularReveal(posX!!, posY!!, animator)
 //        createProfileViewModel = ViewModelProvider(this)[CreateProfileViewModel::class.java]
@@ -139,11 +140,11 @@ class CreateProfileFragment : BaseFragment<FragmentCreateProfileBinding>(
         }
     }
 
-    private fun setupRecyclerView() {
-        val rv = binding.timestamps
-        val adapter = TimeStampAdapter()
-        rv.adapter = adapter
-    }
+//    private fun setupRecyclerView() {
+//        val rv = binding.timestamps
+//        val adapter = TimeStampAdapter()
+//        rv.adapter = adapter
+//    }
 
     /////////////////////////// методы работы со спинерами
     private fun initEditTextTimeInterval() {
@@ -210,12 +211,6 @@ class CreateProfileFragment : BaseFragment<FragmentCreateProfileBinding>(
             navigator().deleteFragment(this)
         }
     }
-
-//    view?.startBackgroundColorAnimation(
-//    ContextCompat.getColor(requireContext(), R.color.ic_launcher_background),
-//    ContextCompat.getColor(requireContext(), R.color.purple_500),
-//    1500
-//    )
 
     override fun isToBeExitedWithAnimation(): Boolean = true
 
