@@ -15,10 +15,7 @@ import ru.jeinmentalist.mail.mentalist.databinding.FragmentCreateProfileBinding
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showToast
 import ru.jeinmentalist.mail.mnemolist.base.BaseFragment
-import ru.jeinmentalist.mail.mnemolist.contract.CustomAction
-import ru.jeinmentalist.mail.mnemolist.contract.HasCustomAction
-import ru.jeinmentalist.mail.mnemolist.contract.Options
-import ru.jeinmentalist.mail.mnemolist.contract.navigator
+import ru.jeinmentalist.mail.mnemolist.contract.*
 import ru.jeinmentalist.mail.mnemolist.utils.*
 import java.util.*
 
@@ -27,7 +24,7 @@ import java.util.*
 class CreateProfileFragment : BaseFragment<FragmentCreateProfileBinding>(
     FragmentCreateProfileBinding::inflate
 ), HasCustomAction,
-    ExitWithAnimation {
+    ExitWithAnimation{
 
     private val createProfileViewModel: CreateProfileViewModel by viewModels()
     private var timestampExecutionTimeText: Long? = null
@@ -57,7 +54,10 @@ class CreateProfileFragment : BaseFragment<FragmentCreateProfileBinding>(
             ContextCompat.getColor(requireContext(), R.color.ic_launcher_background),
             1000
         )
-        view.startCircularReveal(posX!!, posY!!, animator)
+        view.startCircularReveal(posX!!,
+            posY!!,
+            animator
+        )
 //        createProfileViewModel = ViewModelProvider(this)[CreateProfileViewModel::class.java]
         idProfile = createIdDb()
 //        navigator().listenResult(Options::class.java, viewLifecycleOwner){
@@ -213,6 +213,7 @@ class CreateProfileFragment : BaseFragment<FragmentCreateProfileBinding>(
     }
 
     override fun isToBeExitedWithAnimation(): Boolean = true
+
 
     companion object {
         private val ARG_OPTIONS = "ARG_OPTIONS"

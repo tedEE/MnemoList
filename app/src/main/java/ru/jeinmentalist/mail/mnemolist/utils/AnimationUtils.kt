@@ -23,7 +23,11 @@ const val OFFSET_FAB_MENU_FRAGMENT = 160
  * [fromLeft] если `true`, тогда анимация начинается с
  * нижнего левого угла [View], иначе начинается с нижнего правого */
 
-fun View.startCircularReveal(x: Int, y: Int, animator: ObjectAnimator?) {
+fun View.startCircularReveal(x: Int, y: Int, animator: ObjectAnimator?,
+                             animationStart: (()->Unit)? = null,
+                             animationEnd: (()->Unit)? = null,
+                             animationCancel: (()->Unit)? = null,
+                             animationRepeat: (()->Unit)? = null) {
     addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
         override fun onLayoutChange(
             v: View,
@@ -47,7 +51,24 @@ fun View.startCircularReveal(x: Int, y: Int, animator: ObjectAnimator?) {
                 .apply {
                     interpolator = DecelerateInterpolator(2f)
                     duration = durationAnim
-//                    addListener()
+                    addListener(object : Animator.AnimatorListener{
+                        override fun onAnimationStart(animation: Animator?) {
+                            animationStart?.invoke()
+                        }
+
+                        override fun onAnimationEnd(animation: Animator?) {
+                            animationEnd?.invoke()
+                        }
+
+                        override fun onAnimationCancel(animation: Animator?) {
+                            animationCancel?.invoke()
+                        }
+
+                        override fun onAnimationRepeat(animation: Animator?) {
+                            animationRepeat?.invoke()
+                        }
+
+                    })
                     start()
                     animator?.start()
                 }
@@ -61,7 +82,12 @@ fun View.startCircularReveal(x: Int, y: Int, animator: ObjectAnimator?) {
  *  @param exitX: Координата X конечной точки анимации.
  * @param exitY: Координата Y конечной точки анимации.
  * @param block: Блок кода, который будет выполняться после завершения анимации. */
-fun View.exitCircularReveal(exitX: Int, exitY: Int, animator: ObjectAnimator? = null, block: () -> Unit) {
+fun View.exitCircularReveal(
+    exitX: Int,
+    exitY: Int,
+    animator: ObjectAnimator? = null,
+    block: () -> Unit
+) {
     val startRadius = hypot(this.width.toDouble(), this.height.toDouble())
     ViewAnimationUtils.createCircularReveal(this, exitX, exitY, startRadius.toFloat(), 0f).apply {
         duration = 500
@@ -161,7 +187,7 @@ interface ExitWithAnimation {
     var posX: Int?
     var posY: Int?
 
-    fun close(callback: ()->Unit = {})
+    fun close(callback: () -> Unit = {})
 
     fun checkStatus(): Boolean {
         if ((this as? ExitWithAnimation)?.isToBeExitedWithAnimation() == true) {
@@ -172,8 +198,8 @@ interface ExitWithAnimation {
         return false
     }
 
-/**
- * Must return true if required to exit with circular reveal animation
- */
-fun isToBeExitedWithAnimation(): Boolean
+    /**
+     * Must return true if required to exit with circular reveal animation
+     */
+    fun isToBeExitedWithAnimation(): Boolean
 }

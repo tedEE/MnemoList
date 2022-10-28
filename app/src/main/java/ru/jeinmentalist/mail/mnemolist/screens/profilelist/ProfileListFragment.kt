@@ -1,16 +1,21 @@
 package ru.jeinmentalist.mail.mnemolist.screens.profilelist
 
+import android.graphics.drawable.Animatable2
+import android.graphics.drawable.AnimatedVectorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.transition.AutoTransition
 import android.transition.TransitionManager
 import android.view.View
-import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import ru.jeinmentalist.mail.domain.profile.Profile
 import ru.jeinmentalist.mail.mentalist.R
@@ -33,46 +38,42 @@ class ProfileListFragment :
 
     private var profileListAdapter = ProfileListAdapter()
     private var mProfileList: List<Profile> = listOf()
-    var isFabMenuOpen = false
+
+    //    var isFabMenuOpen = false
     private val mProfileListViewModel: ProfileListViewModel by viewModels()
     private var mPositionsFab: IntArray? = null
     var fabOpen = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.bottomNavigationView.background = null
         setupRecyclerView()
         onBackPressed()
 //        dischargeFab()
-        hideFabItem()
         mProfileListViewModel.profileListLiveData.observe(viewLifecycleOwner, Observer {
             mProfileList = it
             profileListAdapter.submitList(it)
         })
 
-        binding.fabMenuItem1.setOnClickListener {
-            isFabMenuOpen = false
-//            closeFabMenu(300)
-        }
-        binding.fabMenuItem2.setOnClickListener {
-            isFabMenuOpen = false
-//            navigator().showCreateProfileFragment()
-        }
-        binding.fabMenuItem3.setOnClickListener {
-            isFabMenuOpen = false
-            navigator().showCreateNoteFragment(Options(mProfileList))
-
-        }
+//        binding.fabMenuItem1.setOnClickListener {
+//            isFabMenuOpen = false
+////            closeFabMenu(300)
+//        }
+//        binding.fabMenuItem2.setOnClickListener {
+//            isFabMenuOpen = false
+////            navigator().showCreateProfileFragment()
+//        }
+//        binding.fabMenuItem3.setOnClickListener {
+//            isFabMenuOpen = false
+//            navigator().showCreateNoteFragment(Options(mProfileList))
+//
+//        }
 
         binding.fab.setOnClickListener {
             showRevealFabMenu(it)
-//            if (!isFabMenuOpen) {
-//                showFabMenu(300)
-//            } else {
-//                closeFabMenu(300)
-//            }
         }
     }
 
-    private fun setupRecyclerViewForCard(view: View,): ProfileItemAdapter {
+    private fun setupRecyclerViewForCard(view: View): ProfileItemAdapter {
         val ad = ProfileItemAdapter()
         val rv = view.findViewById<RecyclerView>(R.id.description_rv)
         rv.adapter = ad
@@ -99,24 +100,80 @@ class ProfileListFragment :
 
             profileListAdapter.onProfileItemLongClickListener = { profile, view ->
                 val profile_description =
-                    view.findViewById<ConstraintLayout>(R.id.profile_description)
+                    view.findViewById<RecyclerView>(R.id.description_rv)
+                val buttonDelete = view.findViewById<MaterialButton>(R.id.button_delete)
                 var v = profile_description.visibility
+                val icon: AnimatedVectorDrawable
+
+                val constraintSet = ConstraintSet()
+                val profileItem = view.findViewById<ConstraintLayout>(R.id.profile_item)
+                constraintSet.clone(profileItem)
+
                 if (v == View.GONE) {
                     v = View.VISIBLE
+                    buttonDelete.icon =
+                        AppCompatResources.getDrawable(requireContext(), R.drawable.short_anim_open)
+                    icon = buttonDelete.icon as AnimatedVectorDrawable
+                    icon.start()
+                    icon.registerAnimationCallback(object : Animatable2.AnimationCallback() {
+                        override fun onAnimationEnd(drawable: Drawable?) {
+                            buttonDelete.icon = AppCompatResources.getDrawable(
+                                requireContext(),
+                                R.drawable.ic_edit_profile
+                            )
+                        }
+                    })
+
+                    constraintSet.connect(
+                        R.id.button_delete,
+                        ConstraintSet.TOP,
+                        R.id.description_rv,
+                        ConstraintSet.TOP
+                    )
+                    constraintSet.connect(
+                        R.id.button_delete,
+                        ConstraintSet.BOTTOM,
+                        R.id.description_rv,
+                        ConstraintSet.BOTTOM
+                    )
                 } else {
                     v = View.GONE
+                    buttonDelete.icon = AppCompatResources.getDrawable(
+                        requireContext(),
+                        R.drawable.short_anim_close
+                    )
+                    icon = buttonDelete.icon as AnimatedVectorDrawable
+                    icon.start()
+                    icon.registerAnimationCallback(object : Animatable2.AnimationCallback() {
+                        override fun onAnimationEnd(drawable: Drawable?) {
+                            buttonDelete.icon = AppCompatResources.getDrawable(
+                                requireContext(),
+                                R.drawable.ic_delete_profile
+                            )
+                        }
+                    })
+                    constraintSet.connect(
+                        R.id.button_delete,
+                        ConstraintSet.TOP,
+                        ConstraintSet.PARENT_ID,
+                        ConstraintSet.TOP
+                    )
+                    constraintSet.clear(R.id.button_delete, ConstraintSet.BOTTOM)
+                    constraintSet.connect(
+                        R.id.button_delete,
+                        ConstraintSet.END,
+                        ConstraintSet.PARENT_ID,
+                        ConstraintSet.END
+                    )
                 }
                 TransitionManager.beginDelayedTransition(this, AutoTransition())
+                constraintSet.applyTo(profileItem)
                 mProfileListViewModel.getTimestampList(profile.profileId) {
                     val list = it.map {
                         it.translationFromMilliseconds()
                     }
                     setupRecyclerViewForCard(view).setData(list)
-//                    listTimestamp.text = list.joinToString(separator = "") {
-//                        "$it \n"
-//                    }
                     profile_description.visibility = v
-//                    listTimestamp.layoutParams.height = 500
                 }
             }
             profileListAdapter.onProfileButtonDeleteClickListener = { profile ->
@@ -129,6 +186,7 @@ class ProfileListFragment :
         view.exitReveal {
             fabOpen = true
             binding.childFragmentContainer.visibility = View.VISIBLE
+            binding.childFragmentContainer.layoutParams
             val positions = view.findLocationOfCenterOnTheScreen()
             mPositionsFab = positions
             childFragmentManager.beginTransaction()
@@ -164,13 +222,20 @@ class ProfileListFragment :
      * реализация методов интерфейса FirstFragment
      */
 
+    override fun createCarts() {
+        closeMenu {
+
+        }
+    }
+
     override fun createNote() {
         closeMenu {
             navigator().showCreateNoteFragment(
                 Options(
                     volume = mProfileList,
                     openParams = mPositionsFab ?: intArrayOf()
-                ))
+                )
+            )
         }
     }
 
@@ -185,18 +250,18 @@ class ProfileListFragment :
         }
     }
 
-    override fun onBackPressed():Boolean {
-        return if (fabOpen){
+    override fun onBackPressed(): Boolean {
+        return if (fabOpen) {
             closeMenu()
             true
-        }else{
+        } else {
             false
         }
     }
 
     private fun closeMenu(block: () -> Unit = {}) {
         val fabFragment = childFragmentManager.findFragmentById(R.id.child_fragment_container)
-        (fabFragment as? ExitWithAnimation)?.close{
+        (fabFragment as? ExitWithAnimation)?.close {
             fabOpen = false
             binding.childFragmentContainer.visibility = View.GONE
             deleteFabMenuFragment(fabFragment)
@@ -205,7 +270,7 @@ class ProfileListFragment :
         }
     }
 
-    private fun deleteFabMenuFragment(fr: Fragment){
+    private fun deleteFabMenuFragment(fr: Fragment) {
         childFragmentManager.beginTransaction().remove(fr).commit()
 //        childFragmentManager.executePendingTransactions()
         childFragmentManager.popBackStack()

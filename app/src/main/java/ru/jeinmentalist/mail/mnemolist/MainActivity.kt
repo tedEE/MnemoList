@@ -22,6 +22,7 @@ import ru.jeinmentalist.mail.mnemolist.screens.createNote.CreateNoteFragment
 import ru.jeinmentalist.mail.mnemolist.screens.createProfile.CreateProfileFragment
 import ru.jeinmentalist.mail.mnemolist.screens.noteList.NoteListFragment
 import ru.jeinmentalist.mail.mnemolist.contract.Options
+import ru.jeinmentalist.mail.mnemolist.screens.ListAllNote.ListAllNoteFragment
 import ru.jeinmentalist.mail.mnemolist.screens.profilelist.ProfileListFragment
 import ru.jeinmentalist.mail.mnemolist.utils.ExitWithAnimation
 
@@ -176,6 +177,10 @@ class MainActivity : AppCompatActivity(), Navigator {
     /**
      *                                    реализация методов Navigator
      */
+
+    override fun showListNote() {
+        addFragment(ListAllNoteFragment.newInstance())
+    }
 
     override fun goToFirstFragment() {
         // метод удаляет все фрагмены в стеке кроме самого первого

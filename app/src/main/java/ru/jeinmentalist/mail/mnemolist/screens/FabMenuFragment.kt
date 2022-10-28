@@ -45,6 +45,10 @@ class FabMenuFragment : BaseFragment<FragmentFabMenuBinding>(FragmentFabMenuBind
         )
         view.startCircularReveal(posX!!, posY!!, animator)
 
+        binding.createCart.setOnClickListener{
+            (parentFragment as FirstFragment).createCarts()
+        }
+
         binding.createProfile.setOnClickListener {
             (parentFragment as FirstFragment).createProfile()
         }

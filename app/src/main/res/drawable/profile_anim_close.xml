@@ -1,0 +1,45 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="24dp"
+            android:height="24dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <group
+                android:name="delete_profile"
+                android:pivotX="12"
+                android:pivotY="12">
+                <path
+                    android:name="path"
+                    android:pathData="M 4.6 18.2 L 4.6 20.2 L 20.3 20.2 L 20.3 18.2 L 4.6 18.2 M 15.3 4.2 C 15.2 4.2 14.9 4.3 14.8 4.5 L 13.5 5.8 L 16.2 8.5 L 17.5 7.2 C 17.8 6.9 17.8 6.4 17.5 6.2 L 15.8 4.5 C 15.6 4.3 15.5 4.2 15.3 4.2 M 12.6 6.4 L 4.5 14.5 L 4.5 17.3 L 7.3 17.3 L 15.4 9.1 L 12.6 6.4"
+                    android:fillColor="#000000"/>
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="delete_profile">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="rotation"
+                android:duration="700"
+                android:valueFrom="360"
+                android:valueTo="0"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+    <target android:name="path">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:startOffset="70"
+                android:duration="330"
+                android:valueFrom="M 20.3 18.2 L 20.3 19.2 L 20.3 20.2 L 4.6 20.2 L 4.6 19.2 L 4.6 18.2 L 12.45 18.2 L 20.3 18.2 M 12.6 6.4 L 15.4 9.1 L 13.78 10.74 C 13.24 11.287 12.7 11.833 12.16 12.38 C 11.62 12.927 11.08 13.473 10.54 14.02 L 8.92 15.66 C 8.38 16.207 7.84 16.753 7.3 17.3 C 6.367 17.3 5.433 17.3 4.5 17.3 L 4.5 14.5 L 12.6 6.4 M 17.067 7.633 L 16.633 8.067 L 16.2 8.5 L 13.5 5.8 L 14.8 4.5 C 14.9 4.3 15.2 4.2 15.3 4.2 C 15.5 4.2 15.6 4.3 15.8 4.5 L 17.5 6.2 C 17.8 6.4 17.8 6.9 17.5 7.2 L 17.067 7.633"
+                android:valueTo="M 14 14 L 16 14 L 12 10 L 8 14 L 10 14 L 10 18 L 14 18 L 14 14 M 6 7 L 18 7 L 18 19 C 18 19.5 17.8 20 17.39 20.39 C 17 20.8 16.5 21 16 21 L 8 21 C 7.5 21 7 20.8 6.61 20.39 C 6.2 20 6 19.5 6 19 L 6 13 L 6 7 M 19 4 L 19 6 L 5 6 L 5 4 L 8.5 4 C 8.833 3.667 9.167 3.333 9.5 3 C 11.167 3 12.833 3 14.5 3 L 15.5 4 C 16.667 4 17.833 4 19 4 L 19 4"
+                android:valueType="pathType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+</animated-vector>

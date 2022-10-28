@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -59,7 +58,8 @@ class ProfileListAdapter : ListAdapter<Profile, ProfileListAdapter.ProfileViewHo
         private val profileName = view.findViewById<TextView>(R.id.nameProfile)
         private val runningEntries = view.findViewById<TextView>(R.id.running_entries)
         private val completedEntries = view.findViewById<TextView>(R.id.completed_entries)
-        private val desc = view.findViewById<ConstraintLayout>(R.id.profile_description)
+//        private val desc = view.findViewById<ConstraintLayout>(R.id.profile_description)
+        private val profile_item = view.findViewById<ConstraintLayout>(R.id.profile_item)
         val buttonDelete = view.findViewById<Button>(R.id.button_delete)
 
         fun bind(item: Profile){
@@ -67,7 +67,7 @@ class ProfileListAdapter : ListAdapter<Profile, ProfileListAdapter.ProfileViewHo
             runningEntries.text = item.runningEntries.toString()
             completedEntries.text = item.completedEntries.toString()
             // необходимо для анимации открытия cardview
-            desc.layoutTransition.enableTransitionType(LayoutTransition.APPEARING)
+//            profile_item.layoutTransition.enableTransitionType(LayoutTransition.APPEARING)
         }
     }
 

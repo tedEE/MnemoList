@@ -16,6 +16,7 @@ interface Navigator {
     // метод можно будет переименовать вроде goToMenu()
     fun goToFirstFragment()
     // показ экранов
+    fun showListNote()
     fun showCreateProfileFragment(options: Options)
     fun showCreateNoteFragment(options: Options)
     fun showListNoteFragment(options: Options)

@@ -107,19 +107,22 @@ class MakeAlarmWorker @AssistedInject constructor(
     }
 
     private fun notificationHandler(note: Note, timestampList: List<Long>) {
-        if (lch == LAUNCH_REBOOT) {
-            val rebootTimestamp: Long =
-                (timestampList[timestampList.indexOf(note.executableTimestamp) - 1]) + note.timeOfCreation.toLong()
-            showLog("rebootTimestamp : $rebootTimestamp")
-            createNotification(rebootTimestamp, note)
-        } else {
-            createNotification(note.timeOfCreation.toLong() + note.executableTimestamp, note)
-            val date = Date(note.timeOfCreation.toLong() + note.executableTimestamp)
-            val calendar = Calendar.getInstance()
-            calendar.time = date
-            showLog("часов : ${calendar.get(Calendar.HOUR_OF_DAY)}")
+//        val time: Long = note.timeOfCreation.toLong() + note.executableTimestamp
+        timeСheck(note){ time ->
+            if (lch == LAUNCH_REBOOT) {
+                val rebootTimestamp: Long =
+                    (timestampList[timestampList.indexOf(note.executableTimestamp) - 1]) + note.timeOfCreation.toLong()
+                val date = Date(rebootTimestamp + time)
+                showLog("rebootTimestamp : $date ")
+                createNotification(rebootTimestamp + time, note)
+            } else {
+                val date = Date((note.timeOfCreation.toLong() + note.executableTimestamp) + time)
+                showLog("timestamp : $date ")
+                createNotification((note.timeOfCreation.toLong() + note.executableTimestamp) + time, note)
+            }
         }
     }
+
 
     private fun createNotification(timestamp: Long, note: Note) {
         ReminderManager.startReminder(
@@ -127,6 +130,23 @@ class MakeAlarmWorker @AssistedInject constructor(
             timestamp,
             note
         )
+    }
+
+    private fun timeСheck(note: Note,callback: (time: Long)->Unit){
+        val time: Long = note.timeOfCreation.toLong() + note.executableTimestamp
+
+        val date = Date(time)
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        showLog("часов : ${calendar.get(Calendar.HOUR_OF_DAY)}")
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+//        if(hour == 23 || hour == 0 || hour < 8){
+        if(hour == 23 || hour < 8){
+            val t = 32400000L // сделать надо по другому сейчас просто 9 часов
+            callback(t)
+        }else{
+            callback(0)
+        }
     }
 
     companion object {
