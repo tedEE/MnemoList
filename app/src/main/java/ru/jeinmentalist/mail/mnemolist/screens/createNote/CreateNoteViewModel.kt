@@ -3,16 +3,26 @@ package ru.jeinmentalist.mail.mnemolist.screens.createNote
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import ru.jeinmentalist.mail.domain.note.Note
 import ru.jeinmentalist.mail.domain.note.noteUseCase.AddNoteUseCase
 import ru.jeinmentalist.mail.domain.note.noteUseCase.NoteUseCases
+import ru.jeinmentalist.mail.domain.profile.Profile
 import ru.jeinmentalist.mail.domain.profile.profileUseCase.CounterEntriesParams
 import ru.jeinmentalist.mail.domain.profile.profileUseCase.ProfileUseCases
 import ru.jeinmentalist.mail.domain.timestamp.Timestamp
 import ru.jeinmentalist.mail.domain.timestamp.timstampUseCase.LoadTimestampListUseCase
 import ru.jeinmentalist.mail.domain.timestamp.timstampUseCase.TimestampsUseCases
+import ru.jeinmentalist.mail.domain.type.ITransmitted
+import ru.jeinmentalist.mail.domain.type.None
+import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
 import ru.jeinmentalist.mail.mnemolist.base.BaseViewModel
+import ru.jeinmentalist.mail.mnemolist.utils.convertTransmittedFromProfile
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,8 +34,18 @@ class CreateNoteViewModel @Inject constructor(
 ) : BaseViewModel(application) {
 
     private val _noteIdLiveData = MutableLiveData<Int>()
+
+    private val _profileListLiveData = MutableLiveData<List<Profile>>()
+    val profileListLiveData: LiveData<List<Profile>>
+        get() = _profileListLiveData
+
     val mNoteIdLiveData: LiveData<Int>
         get() = _noteIdLiveData
+
+    init {
+        getProfileList()
+        showLog("init")
+    }
 
     fun addNote(location: String, descriptor: String, profileId: String) {
         timestampsUseCases.loadTimestampList(LoadTimestampListUseCase.Params(profileId)){
@@ -47,6 +67,28 @@ class CreateNoteViewModel @Inject constructor(
             })
         }
 
+    }
+
+    fun getProfileList() {
+        profileUseCases.getProfileListFlow(None()) {
+            it.either(::handleFailure,::handleProfileList)
+        }
+    }
+
+    private fun handleProfileList(flow: Flow<List<Profile>>){
+        viewModelScope.launch {
+            liveDataFromFlow(flow)
+        }
+    }
+
+    private suspend fun liveDataFromFlow(flow: Flow<List<ITransmitted>>) {
+        flow
+            .map{
+                it.map { convertTransmittedFromProfile(it) }
+            }
+            .collect {
+                _profileListLiveData.postValue(it)
+            }
     }
 
     private fun getMinimalTimestamp(list: List<Long>): Long{

@@ -232,7 +232,8 @@ class ProfileListFragment :
         closeMenu {
             navigator().showCreateNoteFragment(
                 Options(
-                    volume = mProfileList,
+//                    volume = mProfileList,
+                    volume = listOf(),
                     openParams = mPositionsFab ?: intArrayOf()
                 )
             )

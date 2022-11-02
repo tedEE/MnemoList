@@ -1,14 +1,24 @@
 package ru.jeinmentalist.mail.mnemolist.screens.createNote
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.database.Cursor
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import ru.jeinmentalist.mail.domain.profile.Profile
 import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mentalist.databinding.FragmentCreateNoteBinding
+import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
 import ru.jeinmentalist.mail.mnemolist.background.MakeAlarmWorker
 import ru.jeinmentalist.mail.mnemolist.base.BaseFragment
 import ru.jeinmentalist.mail.mnemolist.contract.*
@@ -16,6 +26,7 @@ import ru.jeinmentalist.mail.mnemolist.utils.ExitWithAnimation
 import ru.jeinmentalist.mail.mnemolist.utils.exitCircularReveal
 import ru.jeinmentalist.mail.mnemolist.utils.startBackgroundColorAnimation
 import ru.jeinmentalist.mail.mnemolist.utils.startCircularReveal
+
 
 @AndroidEntryPoint
 class CreateNoteFragment :
@@ -26,21 +37,47 @@ class CreateNoteFragment :
 
     private lateinit var mOptions: Options
     private val mCreateNoteViewModel: CreateNoteViewModel by viewModels()
+    private val getContent: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.GetContent()){ imageUri: Uri? ->
+        Picasso.get()
+            .load(imageUri)
+            .fit()
+            .into(binding.imageDescription)
+    }
 
     override var posX: Int? = null
     override var posY: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mOptions =
-            savedInstanceState?.getParcelable(KEY_OPTIONS) ?: arguments?.getParcelable(ARG_OPTIONS)
-                    ?: throw IllegalArgumentException("You need to specify options to launch this fragment")
-        posX = mOptions.openParams[0]
-        posY = mOptions.openParams[1]
+            mOptions =
+                savedInstanceState?.getParcelable(KEY_OPTIONS) ?: arguments?.getParcelable(ARG_OPTIONS)
+                        ?: throw IllegalArgumentException("You need to specify options to launch this fragment")
+            posX = mOptions.openParams[0]
+            posY = mOptions.openParams[1]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var profileList: List<Profile>
+
+        mCreateNoteViewModel.profileListLiveData.observe(viewLifecycleOwner, { listProfile: List<Profile> ->
+            profileList = listProfile
+            val adapter = SpinnerAdapter(profileList)
+            binding.profileSpinner.adapter = adapter
+        })
+
+        binding.profileSpinner.onItemSelectedListener = OnItemSelectedListener {
+            hideKeyboard(binding.enterDescriptionNote)
+            hideKeyboard(binding.enterLocationNote)
+        }
+
+        binding.imageButton.setOnClickListener {
+//            val intent = Intent().apply {`
+//                setType("image/*")
+//                setAction(Intent.ACTION_GET_CONTENT)
+//            }
+            getContent.launch("image/*")
+        }
 
         val animator = binding.rootCreateNote.startBackgroundColorAnimation(
             ContextCompat.getColor(requireContext(), R.color.purple_500),
@@ -62,15 +99,10 @@ class CreateNoteFragment :
             }
         }
 
-        val profileList = mOptions.volume.map {
-            it as Profile
-        }
-        val adapter = SpinnerAdapter(profileList)
-        binding.profileSpinner.adapter = adapter
-        binding.profileSpinner.onItemSelectedListener = OnItemSelectedListener {
-            hideKeyboard(binding.enterDescriptionNote)
-            hideKeyboard(binding.enterLocationNote)
-        }
+//        val profileList = mOptions.volume.map {
+//            it as Profile
+//        }
+
     }
 
     override fun isToBeExitedWithAnimation(): Boolean = true
@@ -113,7 +145,11 @@ class CreateNoteFragment :
             )
             /////////////////////////////
             mCreateNoteViewModel.mNoteIdLiveData.observe(viewLifecycleOwner, Observer {
-                MakeAlarmWorker.create(requireContext(), intArrayOf(it), MakeAlarmWorker.LAUNCH_CREATION)
+                MakeAlarmWorker.create(
+                    requireContext(),
+                    intArrayOf(it),
+                    MakeAlarmWorker.LAUNCH_CREATION
+                )
             })
         }
     }
