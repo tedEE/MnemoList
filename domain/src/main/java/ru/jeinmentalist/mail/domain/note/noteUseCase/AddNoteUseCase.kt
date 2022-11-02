@@ -9,7 +9,7 @@ import ru.jeinmentalist.mail.domain.usecase.UseCase
 
 class AddNoteUseCase(private val repository: INoteRepository) : UseCase<AddNoteUseCase.Param, Int>(){
     override suspend fun run(params: Param): Either<Failure, Int> {
-        return repository.add(params.location, params.description, params.profId, params.timeOfCreation, params.executableTimestamp, params.state)
+        return repository.add(params.location, params.description, params.profId, params.timeOfCreation, params.executableTimestamp, params.state, params.pathImage)
     }
 
     data class Param(
@@ -18,6 +18,7 @@ class AddNoteUseCase(private val repository: INoteRepository) : UseCase<AddNoteU
         val profId: String,
         val timeOfCreation: String,
         val executableTimestamp: Long,
-        val state: Int
+        val state: Int,
+        val pathImage: String
     )
 }

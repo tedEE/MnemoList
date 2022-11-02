@@ -9,7 +9,8 @@ data class Note(
     val profId: String,
     val timeOfCreation: String,
     val executableTimestamp: Long, // выполняемая временная метка
-    val state: Int
+    val state: Int,
+    val pathImage: String
 ):ITransmitted {
     companion object{
         const val PERFORMED = 1

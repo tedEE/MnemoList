@@ -28,7 +28,9 @@ data class NoteEntity(
     val timeOfCreation: String,
     @ColumnInfo(name = "executable_timestamp")
     val executableTimestamp: Long = 0,
-    val state: Int
+    val state: Int,
+    @ColumnInfo(name = "path_image", defaultValue = "")
+    val pathImage: String
 ) {
     companion object{
         const val TABLE_NAME_NOTE = "notes_table"
@@ -43,5 +45,6 @@ fun NoteEntity.map() =
         profId = this.profId,
         timeOfCreation = this.timeOfCreation,
         executableTimestamp = this.executableTimestamp,
-        state = state
+        state = this.state,
+        pathImage = this.pathImage
     )

@@ -20,7 +20,6 @@ import ru.jeinmentalist.mail.domain.timestamp.timstampUseCase.LoadTimestampListU
 import ru.jeinmentalist.mail.domain.timestamp.timstampUseCase.TimestampsUseCases
 import ru.jeinmentalist.mail.domain.type.ITransmitted
 import ru.jeinmentalist.mail.domain.type.None
-import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
 import ru.jeinmentalist.mail.mnemolist.base.BaseViewModel
 import ru.jeinmentalist.mail.mnemolist.utils.convertTransmittedFromProfile
 import javax.inject.Inject
@@ -44,7 +43,6 @@ class CreateNoteViewModel @Inject constructor(
 
     init {
         getProfileList()
-        showLog("init")
     }
 
     fun addNote(location: String, descriptor: String, profileId: String) {
@@ -57,7 +55,8 @@ class CreateNoteViewModel @Inject constructor(
                         profileId,
                         System.currentTimeMillis().toString(),
                         getMinimalTimestamp(mapTimestampList(it)),
-                        Note.PERFORMED
+                        Note.PERFORMED,
+                        "" // todo надо реализовать добавление пути
                     )
                 ) {
                     it.either(::handleFailure,::updateNoteIdLiveData)

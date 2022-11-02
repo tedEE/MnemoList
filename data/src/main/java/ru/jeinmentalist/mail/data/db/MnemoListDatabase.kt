@@ -1,5 +1,6 @@
 package ru.jeinmentalist.mail.data.db
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import ru.jeinmentalist.mail.data.db.dao.NoteDao
@@ -13,8 +14,9 @@ const val dbForMobile = "mnemo_list_database"
 
 @Database(
     entities = [NoteEntity::class, ProfileEntity::class, TimestampEntity::class],
-    version = 1,
-    exportSchema = true
+    version = 2,
+    exportSchema = true,
+    autoMigrations = [AutoMigration(from = 1, to = 2)]
 )
 abstract class MnemoListDatabase : RoomDatabase() {
 

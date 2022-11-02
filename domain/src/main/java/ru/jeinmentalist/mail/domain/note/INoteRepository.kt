@@ -6,7 +6,7 @@ import ru.jeinmentalist.mail.domain.type.None
 import ru.jeinmentalist.mail.domain.type.exception.Failure
 
 interface INoteRepository {
-    fun add(location: String, description: String, profId: String, timeOfCreation: String, executableTimestamp: Long, state: Int): Either<Failure, Int>
+    fun add(location: String, description: String, profId: String, timeOfCreation: String, executableTimestamp: Long, state: Int, pathImage: String): Either<Failure, Int>
     fun getById(id: Int): Either<Failure, Note>
     fun getList(): Either<Failure, List<Note>>
     fun getListByProfileId(profId: String): Either<Failure, List<Note>>

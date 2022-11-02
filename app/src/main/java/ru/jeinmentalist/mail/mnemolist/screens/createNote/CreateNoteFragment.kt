@@ -1,12 +1,7 @@
 package ru.jeinmentalist.mail.mnemolist.screens.createNote
 
-import android.app.Activity.RESULT_OK
-import android.content.Intent
-import android.database.Cursor
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -37,34 +32,38 @@ class CreateNoteFragment :
 
     private lateinit var mOptions: Options
     private val mCreateNoteViewModel: CreateNoteViewModel by viewModels()
-    private val getContent: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.GetContent()){ imageUri: Uri? ->
-        Picasso.get()
-            .load(imageUri)
-            .fit()
-            .into(binding.imageDescription)
-    }
+    private val getContent: ActivityResultLauncher<String> =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { imageUri: Uri? ->
+            showLog(imageUri.toString())
+            Picasso.get()
+                .load(imageUri)
+                .fit()
+                .into(binding.imageDescription)
+        }
 
     override var posX: Int? = null
     override var posY: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-            mOptions =
-                savedInstanceState?.getParcelable(KEY_OPTIONS) ?: arguments?.getParcelable(ARG_OPTIONS)
-                        ?: throw IllegalArgumentException("You need to specify options to launch this fragment")
-            posX = mOptions.openParams[0]
-            posY = mOptions.openParams[1]
+        mOptions =
+            savedInstanceState?.getParcelable(KEY_OPTIONS) ?: arguments?.getParcelable(ARG_OPTIONS)
+                    ?: throw IllegalArgumentException("You need to specify options to launch this fragment")
+        posX = mOptions.openParams[0]
+        posY = mOptions.openParams[1]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var profileList: List<Profile>
 
-        mCreateNoteViewModel.profileListLiveData.observe(viewLifecycleOwner, { listProfile: List<Profile> ->
-            profileList = listProfile
-            val adapter = SpinnerAdapter(profileList)
-            binding.profileSpinner.adapter = adapter
-        })
+        mCreateNoteViewModel.profileListLiveData.observe(
+            viewLifecycleOwner,
+            { listProfile: List<Profile> ->
+                profileList = listProfile
+                val adapter = SpinnerAdapter(profileList)
+                binding.profileSpinner.adapter = adapter
+            })
 
         binding.profileSpinner.onItemSelectedListener = OnItemSelectedListener {
             hideKeyboard(binding.enterDescriptionNote)

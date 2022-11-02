@@ -11,7 +11,7 @@ import ru.jeinmentalist.mail.domain.type.Either
 import ru.jeinmentalist.mail.domain.type.None
 import ru.jeinmentalist.mail.domain.type.exception.Failure
 
-class NoteRepositoryImpl (private val dao: NoteDao) : INoteRepository {
+class NoteRepositoryImpl(private val dao: NoteDao) : INoteRepository {
 
     override fun add(
         location: String,
@@ -19,7 +19,8 @@ class NoteRepositoryImpl (private val dao: NoteDao) : INoteRepository {
         profId: String,
         timeOfCreation: String,
         executableTimestamp: Long,
-        state: Int
+        state: Int,
+        pathImage: String
     ): Either<Failure, Int> {
         val id = dao.addNote(
             NoteEntity(
@@ -28,7 +29,8 @@ class NoteRepositoryImpl (private val dao: NoteDao) : INoteRepository {
                 profId = profId,
                 timeOfCreation = timeOfCreation,
                 executableTimestamp = executableTimestamp,
-                state = state
+                state = state,
+                pathImage = pathImage
             )
         )
         return Either.Right(id.toInt())
@@ -50,7 +52,7 @@ class NoteRepositoryImpl (private val dao: NoteDao) : INoteRepository {
 
     override fun getNotesFlow(profId: String): Either<Failure, Flow<List<Note>>> {
         val flow = dao.loadNoteFlowByIdProfile(profId)
-            .map { list->
+            .map { list ->
                 list.map {
                     it.map()
                 }
@@ -58,7 +60,10 @@ class NoteRepositoryImpl (private val dao: NoteDao) : INoteRepository {
         return Either.Right(flow)
     }
 
-    override fun updateExecutableTimestamp(id: Int, executableTimestamp: Long): Either<Failure, None> {
+    override fun updateExecutableTimestamp(
+        id: Int,
+        executableTimestamp: Long
+    ): Either<Failure, None> {
         dao.updateNoteExecutableTimestamp(id, executableTimestamp)
         return Either.Right(None())
     }
@@ -76,14 +81,15 @@ class NoteRepositoryImpl (private val dao: NoteDao) : INoteRepository {
     override fun deleteNote(note: Note): Either<Failure, None> {
         dao.deleteNote(
             NoteEntity(
-            noteId = note.noteId,
-            location = note.location,
-            description = note.description,
-            profId = note.profId,
-            timeOfCreation = note.timeOfCreation,
-            executableTimestamp = note.executableTimestamp,
-            state = note.state
-            )
+                noteId = note.noteId,
+                location = note.location,
+                description = note.description,
+                profId = note.profId,
+                timeOfCreation = note.timeOfCreation,
+                executableTimestamp = note.executableTimestamp,
+                state = note.state,
+                pathImage = note.pathImage
+                )
         )
         return Either.Right(None())
     }
