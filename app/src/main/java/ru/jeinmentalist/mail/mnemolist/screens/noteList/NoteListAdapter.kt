@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import ru.jeinmentalist.mail.domain.note.Note
 import ru.jeinmentalist.mail.mentalist.R
 
@@ -38,6 +39,7 @@ class NoteListAdapter : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(NoteIt
     class NoteViewHolder(val view: View) : RecyclerView.ViewHolder(view){
         private val location = view.findViewById<TextView>(R.id.location)
         val iconDelete = view.findViewById<ImageView>(R.id.icon_delete_note)
+
         fun binding(item: Note){
             location.text = item.location
             // измение цвета иконки удаление

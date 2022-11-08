@@ -20,9 +20,10 @@ class AlarmWorker @AssistedInject constructor(
     override fun doWork(): Result {
         val title = workerParameters.inputData.getString(TITLE) ?: ""
         val body = workerParameters.inputData.getString(BODY) ?: ""
+        val imagePath = workerParameters.inputData.getString(IMAGE_PATH) ?: ""
         val id = workerParameters.inputData.getInt(ID, 0)
         try {
-            sendNotification(title, body, id, applicationContext)
+            sendNotification(title, body, id, applicationContext, imagePath)
         } catch (ex: Exception) {
             return Result.failure(); //или Result.retry()
         }
@@ -35,6 +36,7 @@ class AlarmWorker @AssistedInject constructor(
         const val TITLE = "notification_title"
         const val BODY = "notification_body"
         const val ID = "notification_id"
+        const val IMAGE_PATH = "image_path"
 
         fun makeRequest( note: Note): OneTimeWorkRequest {
 
@@ -42,7 +44,8 @@ class AlarmWorker @AssistedInject constructor(
                 .setInputData(workDataOf(
                     TITLE to note.location,
                     BODY to note.description,
-                    ID to note.noteId
+                    ID to note.noteId,
+                    IMAGE_PATH to note.pathImage
                 ))
                 .setInitialDelay(delayСalculation(note), TimeUnit.MILLISECONDS)
                 .build()

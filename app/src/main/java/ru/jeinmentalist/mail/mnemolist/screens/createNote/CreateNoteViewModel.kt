@@ -45,7 +45,7 @@ class CreateNoteViewModel @Inject constructor(
         getProfileList()
     }
 
-    fun addNote(location: String, descriptor: String, profileId: String) {
+    fun addNote(location: String, descriptor: String, profileId: String, pathImage: String) {
         timestampsUseCases.loadTimestampList(LoadTimestampListUseCase.Params(profileId)){
             it.either({}, {
                 noteUseCase.addNote(
@@ -56,7 +56,7 @@ class CreateNoteViewModel @Inject constructor(
                         System.currentTimeMillis().toString(),
                         getMinimalTimestamp(mapTimestampList(it)),
                         Note.PERFORMED,
-                        "" // todo надо реализовать добавление пути
+                        pathImage
                     )
                 ) {
                     it.either(::handleFailure,::updateNoteIdLiveData)

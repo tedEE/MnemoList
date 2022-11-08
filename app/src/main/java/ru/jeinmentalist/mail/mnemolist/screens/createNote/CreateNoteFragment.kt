@@ -2,6 +2,7 @@ package ru.jeinmentalist.mail.mnemolist.screens.createNote
 
 import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +22,7 @@ import ru.jeinmentalist.mail.mnemolist.utils.ExitWithAnimation
 import ru.jeinmentalist.mail.mnemolist.utils.exitCircularReveal
 import ru.jeinmentalist.mail.mnemolist.utils.startBackgroundColorAnimation
 import ru.jeinmentalist.mail.mnemolist.utils.startCircularReveal
+import java.io.File
 
 
 @AndroidEntryPoint
@@ -31,10 +33,14 @@ class CreateNoteFragment :
     ExitWithAnimation {
 
     private lateinit var mOptions: Options
+    private var mPathImage: String = ""
+    private var mProfileList: List<Profile>? = null
     private val mCreateNoteViewModel: CreateNoteViewModel by viewModels()
     private val getContent: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.GetContent()) { imageUri: Uri? ->
-            showLog(imageUri.toString())
+            val path = imageUri?.toString() ?: ""
+            showLog(path)
+            mPathImage = path
             Picasso.get()
                 .load(imageUri)
                 .fit()
@@ -53,15 +59,26 @@ class CreateNoteFragment :
         posY = mOptions.openParams[1]
     }
 
+//    fun get_filename_by_uri(uri : Uri) : String{
+//
+//        requireContext().contentResolver.query(uri, null, null, null, null).use { cursor ->
+//            cursor?.let {
+//                val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+//                it.moveToFirst()
+//                return it.getString(nameIndex)
+//            }
+//        }
+//        return ""
+//    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var profileList: List<Profile>
 
         mCreateNoteViewModel.profileListLiveData.observe(
             viewLifecycleOwner,
             { listProfile: List<Profile> ->
-                profileList = listProfile
-                val adapter = SpinnerAdapter(profileList)
+                mProfileList = listProfile
+                val adapter = SpinnerAdapter(mProfileList ?: listOf())
                 binding.profileSpinner.adapter = adapter
             })
 
@@ -136,11 +153,13 @@ class CreateNoteFragment :
         validateLocationInput {
             val location = binding.enterLocationNote.text.toString()
             val description = binding.enterDescriptionNote.text.toString()
-            val profile = mOptions.volume[binding.profileSpinner.selectedItemPosition] as Profile
+            val profile = mProfileList?.get(binding.profileSpinner.selectedItemPosition)
+            showLog("path image : $mPathImage")
             mCreateNoteViewModel.addNote(
                 location,
                 description,
-                profile.profileId
+                profile!!.profileId,
+                mPathImage
             )
             /////////////////////////////
             mCreateNoteViewModel.mNoteIdLiveData.observe(viewLifecycleOwner, Observer {

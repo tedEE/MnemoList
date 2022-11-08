@@ -112,8 +112,9 @@ class MakeAlarmWorker @AssistedInject constructor(
             if (lch == LAUNCH_REBOOT) {
                 val rebootTimestamp: Long =
                     (timestampList[timestampList.indexOf(note.executableTimestamp) - 1]) + note.timeOfCreation.toLong()
-                val date = Date(rebootTimestamp + time)
-                showLog("rebootTimestamp : $date ")
+//                val date = Date(rebootTimestamp + time)
+//                showLog("rebootTimestamp : $date ")
+//                createNotification(rebootTimestamp + time, note)
                 createNotification(rebootTimestamp + time, note)
             } else {
                 val date = Date((note.timeOfCreation.toLong() + note.executableTimestamp) + time)
@@ -142,8 +143,8 @@ class MakeAlarmWorker @AssistedInject constructor(
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
 //        if(hour == 23 || hour == 0 || hour < 8){
         if(hour == 23 || hour < 8){
-            val t = 32400000L // сделать надо по другому сейчас просто 9 часов
-            callback(t)
+//            val t = 32400000L // сделать надо по другому сейчас просто 9 часов
+            callback(0)
         }else{
             callback(0)
         }

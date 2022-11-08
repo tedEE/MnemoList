@@ -11,12 +11,14 @@ class AlarmReceiver : BroadcastReceiver() {
         val title = intent?.getStringExtra(TITLE) ?: ""
         val message = intent?.getStringExtra(MESSAGE) ?: ""
         val noteId = intent?.getIntExtra(NOTE_ID, 0) ?: 0
-        sendNotification(title, message, noteId, context!!)
+        val pathImage = intent?.getStringExtra(IMAGE_PATH) ?: ""
+        sendNotification(title, message, noteId, context!!, pathImage)
 
     }
     companion object{
         const val TITLE = "title"
         const val MESSAGE = "message"
         const val NOTE_ID = "note_id"
+        const val IMAGE_PATH = "image_path"
     }
 }

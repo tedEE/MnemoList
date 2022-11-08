@@ -24,6 +24,7 @@ object ReminderManager {
                 intent.putExtra(AlarmReceiver.TITLE, note.location)
                 intent.putExtra(AlarmReceiver.MESSAGE, note.description)
                 intent.putExtra(AlarmReceiver.NOTE_ID, note.noteId)
+                intent.putExtra(AlarmReceiver.IMAGE_PATH, note.pathImage)
                 PendingIntent.getBroadcast(
                     context.applicationContext,
                     requestCode.toInt(),

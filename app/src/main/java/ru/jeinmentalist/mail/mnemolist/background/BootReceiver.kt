@@ -11,7 +11,7 @@ import ru.jeinmentalist.mail.mnemolist.UI.utilits.showToast
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        sendNotification("BootReceiver", "ребут устройства", 1, context!!)
+        sendNotification("BootReceiver", "ребут устройства", 1, context!!, "")
         BootWorker.create(context)
 //        val workManager = WorkManager.getInstance(context!!)
 //        workManager.enqueueUniqueWork(

@@ -23,6 +23,7 @@ class ShowDescriptionNoteDialogFragment : DialogFragment(){
         return AlertDialog.Builder(requireContext())
             .setCancelable(true)
             .setTitle(getString(R.string.description_note_dialog_title))
+
             .setMessage(volume)
             .setPositiveButton(getString(R.string.ok), listener)
             .create()
