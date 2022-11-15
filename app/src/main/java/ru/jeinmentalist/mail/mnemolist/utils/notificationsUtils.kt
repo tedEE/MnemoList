@@ -5,30 +5,19 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.icu.number.NumberFormatter.with
-import android.icu.number.NumberRangeFormatter.with
 import android.net.Uri
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mnemolist.App
 import ru.jeinmentalist.mail.mnemolist.MainActivity
 import ru.jeinmentalist.mail.mnemolist.background.RepetitionNotificationReceiver
 import ru.jeinmentalist.mail.mnemolist.background.StopNotificationReceiver
-import java.lang.Exception
+import ru.jeinmentalist.mail.mnemolist.background.ShowBigPicReceiver
 
 
 private val NOTIFICATION_ID = 0
@@ -51,39 +40,21 @@ fun sendNotification(
     messageBody: String,
     noteId: Int,
     applicationContext: Context,
-    imagePath: String
+    pathImage: String
 ) {
 
     val idNotification = noteId
     count++
 
-//    var myBitmap = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_alert)
-//    Picasso.get()
-//        .load(imagePath)
-//        .into(object : Target {
-//            override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-//                myBitmap = bitmap!!
-//            }
-//
-//            override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
-//
-//            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
-//
-//        })
-//    GlobalScope.launch(Dispatchers.IO) {
-//        myBitmap = Picasso.get().load(imagePath).get()
-//    }
-
-    val inputStream = applicationContext.contentResolver.openInputStream(Uri.parse(imagePath))
+    val inputStream = applicationContext.contentResolver.openInputStream(Uri.parse(pathImage))
     val bitmap = BitmapFactory.decodeStream(inputStream)
 
     val bigPicStyle = NotificationCompat.BigPictureStyle()
         .bigPicture(bitmap)
         .bigLargeIcon(null)
 
-
     val remember =
-        BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_remember)
+        BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_brain_1)
 
     val proceedIntent =
         Intent(applicationContext, RepetitionNotificationReceiver::class.java).let { intent ->
@@ -95,6 +66,7 @@ fun sendNotification(
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
         }
+
 
     val stopIntent =
         Intent(applicationContext, StopNotificationReceiver::class.java).let { intent ->
@@ -158,6 +130,92 @@ fun sendNotification(
     nm.notify(idNotification, builder.build())
 }
 
+fun sendBigPicNotification(
+    messageTitle: String,
+    messageBody: String,
+    noteId: Int,
+    applicationContext: Context,
+    imagePath: String
+) {
+
+    val idNotification = noteId
+    count++
+
+    val inputStream = applicationContext.contentResolver.openInputStream(Uri.parse(imagePath))
+    val bitmap = BitmapFactory.decodeStream(inputStream)
+
+    val bigPicStyle = NotificationCompat.BigPictureStyle()
+        .bigPicture(bitmap)
+        .bigLargeIcon(null)
+
+
+    val remember =
+        BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_remember)
+
+    val proceedIntent =
+        Intent(applicationContext, RepetitionNotificationReceiver::class.java).let { intent ->
+            intent.putExtra(RepetitionNotificationReceiver.NOTE_ID, noteId)
+            PendingIntent.getBroadcast(
+                applicationContext,
+                noteId,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+
+    val stopIntent =
+        Intent(applicationContext, StopNotificationReceiver::class.java).let { intent ->
+            intent.putExtra("nification_id", idNotification)
+            PendingIntent.getBroadcast(
+                applicationContext,
+                noteId,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+
+    val contentIntent = Intent(applicationContext, MainActivity::class.java).let { intent ->
+        PendingIntent.getActivity(
+            applicationContext,
+            NOTIFICATION_ID,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    }
+
+    val builder = NotificationCompat.Builder(
+        applicationContext,
+        "exampleServiceChannel"
+    )
+        .setSmallIcon(R.drawable.ic_remember__1_)
+//        .setContentTitle(count.toString()) наверно было нужно отслеживать count
+        .setContentTitle(messageTitle)
+//        .setTicker("Всплывающий текст")
+//        .setWhen(System.currentTimeMillis())
+        .setContentText(messageBody)
+//        .setContentIntent(contentIntent)
+//        .setLargeIcon(bitmap)
+        .addAction(R.drawable.ic_remember, "Продолжить", proceedIntent)
+        .addAction(R.drawable.ic_remember__1_, "Сбросить", stopIntent)
+        //уведомление закрывается, когда оно переводит их в приложение.
+        .setAutoCancel(true)
+//        .setContentInfo("setContentInfo")
+//        .setSound(null)
+//        .setSilent(true)
+        // запрет на смахивание
+        .setOngoing(true)
+        //приоритет
+        .setPriority(NotificationCompat.PRIORITY_MAX)
+        .setStyle(bigPicStyle)
+        .setLargeIcon(bitmap)
+
+
+    val nm =
+        applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    nm.notify(idNotification, builder.build())
+}
+
 fun sendLastNotification(applicationContext: Context) {
 
     val contentIntent = Intent(applicationContext, MainActivity::class.java).let { intent ->
@@ -188,6 +246,27 @@ fun sendLastNotification(applicationContext: Context) {
         .setContentIntent(contentIntent)
         .setAutoCancel(true)
         .setContentInfo("setContentInfo")
+
+    val nm =
+        applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    nm.notify(System.currentTimeMillis().toInt(), builder.build())
+}
+
+fun createRebootNotification( applicationContext: Context, title: String){
+    val remember =
+        BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_remember)
+    val builder = NotificationCompat.Builder(
+        applicationContext,
+        "exampleServiceChannel"
+    )
+        .setSmallIcon(R.drawable.ic_remember__1_)
+        .setLargeIcon(remember)
+        .setContentTitle(title)
+        .setWhen(System.currentTimeMillis())
+        .setContentText("запуск после перезагрузки")
+        .setContentInfo("setContentInfo")
+        .setPriority(NotificationCompat.PRIORITY_MAX)
 
     val nm =
         applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

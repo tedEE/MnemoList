@@ -5,8 +5,10 @@
 
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="com.bignerdranch.android.photogallery.PRIVATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:name="ru.jeinmentalist.mail.mnemolist.App"
         android:allowBackup="true"
@@ -16,37 +18,37 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MentaList">
         <receiver
-            android:name="ru.jeinmentalist.mail.mnemolist.background.RepetitionNotificationReceiver"
-            android:permission="com.bignerdranch.android.photogallery.PRIVATE"
-            android:protectionLevel="signature"
+            android:name="ru.jeinmentalist.mail.mnemolist.background.ShowBigPicReceiver"
             android:enabled="true"
-            android:exported="false">
+            android:exported="false"/>
+        <receiver
+            android:name="ru.jeinmentalist.mail.mnemolist.background.RepetitionNotificationReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="com.bignerdranch.android.photogallery.PRIVATE"
+            android:protectionLevel="signature">
             <intent-filter>
-                <action
-                    android:name="com.bignerdranch.android.photogallery.SHOW_NOTIFICATION" />
+                <action android:name="com.bignerdranch.android.photogallery.SHOW_NOTIFICATION" />
             </intent-filter>
-
         </receiver>
-
         <receiver
             android:name="ru.jeinmentalist.mail.mnemolist.background.StopNotificationReceiver"
             android:enabled="true" />
-
         <receiver
             android:name="ru.jeinmentalist.mail.mnemolist.background.BootReceiver"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <category android:name="android.intent.category.DEFAULT" />
 
-                <!--For HTC devices-->
-                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+
+                <!-- For HTC devices -->
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name="ru.jeinmentalist.mail.mnemolist.background.AlarmReceiver"
             android:enabled="true" />
@@ -68,8 +70,7 @@
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove">
-        </provider>
+            tools:node="remove" />
     </application>
 
 </manifest>

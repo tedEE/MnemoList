@@ -1,11 +1,14 @@
 package ru.jeinmentalist.mail.mnemolist.screens.createNote
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -38,8 +41,8 @@ class CreateNoteFragment :
     private val mCreateNoteViewModel: CreateNoteViewModel by viewModels()
     private val getContent: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.GetContent()) { imageUri: Uri? ->
+            //todo где то здесь надо реализовать запрос на разрешение
             val path = imageUri?.toString() ?: ""
-            showLog(path)
             mPathImage = path
             Picasso.get()
                 .load(imageUri)
@@ -120,6 +123,13 @@ class CreateNoteFragment :
 //        }
 
     }
+
+    fun permisens(){
+        if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+        }
+    }
+
 
     override fun isToBeExitedWithAnimation(): Boolean = true
 
