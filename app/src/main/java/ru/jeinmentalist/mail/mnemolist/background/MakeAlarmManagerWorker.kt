@@ -14,12 +14,15 @@ import ru.jeinmentalist.mail.domain.profile.profileUseCase.CounterEntriesParams
 import ru.jeinmentalist.mail.domain.timestamp.timstampUseCase.LoadTimestampListUseCase
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.sendLastNotification
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
-import ru.jeinmentalist.mail.mnemolist.background.reminder.ReminderWorker
 import ru.jeinmentalist.mail.mnemolist.base.BaseWorker
 import java.util.*
+import java.util.concurrent.TimeUnit
 
+/**
+ * Воркер для работы Alarm Manager вынес сюда код при рефакторинге
+ */
 @HiltWorker
-class MakeAlarmWorker @AssistedInject constructor(
+class MakeAlarmManagerWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted val workerParameters: WorkerParameters,
     val mGetNoteById: GetNoteByIdUseCase,
@@ -67,6 +70,13 @@ class MakeAlarmWorker @AssistedInject constructor(
 //                        createNotification(note)
                     }
                 }
+
+//                if (note.executableTimestamp == sortList.last()) {
+//                    changeNoteState(note)
+//                } else {
+//                    if (lch == LAUNCH_REPETITION)
+//                        changeExecutableTimestamp(note, sortList)
+//                }
             }
         } else {
             changeCompletedEntries(note)
@@ -120,13 +130,11 @@ class MakeAlarmWorker @AssistedInject constructor(
 
 
     private fun createNotification(timestamp: Long, note: Note) {
-        // сдесь должен быть вызов метода интерфейса
-        ReminderWorker.create(applicationContext, note.executableTimestamp , note.noteId)
-//        ReminderManager.startReminder(
-//            applicationContext,
-//            timestamp,
-//            note
-//        )
+        ReminderManager.startReminder(
+            applicationContext,
+            timestamp,
+            note
+        )
     }
 
     private fun timeСheck(note: Note,callback: (time: Long)->Unit){

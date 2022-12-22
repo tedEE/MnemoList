@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
@@ -40,17 +41,17 @@ fun sendNotification(
     messageBody: String,
     noteId: Int,
     applicationContext: Context,
-    pathImage: String
+    image: Bitmap
 ) {
 
     val idNotification = noteId
     count++
 
-    val inputStream = applicationContext.contentResolver.openInputStream(Uri.parse(pathImage))
-    val bitmap = BitmapFactory.decodeStream(inputStream)
+//    val inputStream = applicationContext.contentResolver.openInputStream(Uri.parse(pathImage))
+//    val bitmap = BitmapFactory.decodeStream(inputStream)
 
     val bigPicStyle = NotificationCompat.BigPictureStyle()
-        .bigPicture(bitmap)
+        .bigPicture(image)
         .bigLargeIcon(null)
 
     val remember =
