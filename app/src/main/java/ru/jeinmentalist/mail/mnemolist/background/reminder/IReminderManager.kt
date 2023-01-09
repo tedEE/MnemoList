@@ -7,6 +7,7 @@ interface IReminderManager {
     fun startReminder(
         context: Context,
         note: Note,
+        timeReminder: Long,
         reminderId: Int = REMINDER_NOTIFICATION_REQUEST_CODE
     )
 

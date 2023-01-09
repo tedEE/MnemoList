@@ -14,7 +14,8 @@ import ru.jeinmentalist.mail.domain.profile.profileUseCase.CounterEntriesParams
 import ru.jeinmentalist.mail.domain.timestamp.timstampUseCase.LoadTimestampListUseCase
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.sendLastNotification
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
-import ru.jeinmentalist.mail.mnemolist.background.reminder.ReminderWorker
+import ru.jeinmentalist.mail.mnemolist.background.reminder.IReminderManager
+import ru.jeinmentalist.mail.mnemolist.background.reminder.RemindManagerOnWorkManager
 import ru.jeinmentalist.mail.mnemolist.base.BaseWorker
 import java.util.*
 
@@ -26,7 +27,7 @@ class MakeAlarmWorker @AssistedInject constructor(
     val mUpdateNote: UpdateNoteExecutableTimestampUseCase,
     val mUpdateNoteState: UpdateNoteStateUseCase,
     val mLoadTimestampList: LoadTimestampListUseCase,
-    val mChangeCompletedEntries: ChangeCompletedEntriesUseCase
+    val mChangeCompletedEntries: ChangeCompletedEntriesUseCase,
 ) : BaseWorker(context, workerParameters) {
 
     private var lch: Int = 0
@@ -43,7 +44,6 @@ class MakeAlarmWorker @AssistedInject constructor(
 
     private fun handleNote(note: Note) {
         if (note.state != Note.DONE) {
-//            createNotification(note)
             getListTimestamp(note) { listTimestamp: List<Long> ->
                 val sortList = listTimestamp.sorted()
                 // сдесь переодически падает изза пустого листа
@@ -55,7 +55,6 @@ class MakeAlarmWorker @AssistedInject constructor(
                     }
                     LAUNCH_REPETITION -> {
                         notificationHandler(note, sortList)
-//                        createNotification(note)
                         if (note.executableTimestamp == sortList.last()) {
                             changeNoteState(note)
                         } else {
@@ -64,7 +63,6 @@ class MakeAlarmWorker @AssistedInject constructor(
                     }
                     LAUNCH_REBOOT -> {
                         notificationHandler(note, sortList)
-//                        createNotification(note)
                     }
                 }
             }
@@ -101,48 +99,38 @@ class MakeAlarmWorker @AssistedInject constructor(
     }
 
     private fun notificationHandler(note: Note, timestampList: List<Long>) {
-//        val time: Long = note.timeOfCreation.toLong() + note.executableTimestamp
-        timeСheck(note){ time ->
-            if (lch == LAUNCH_REBOOT) {
-                val rebootTimestamp: Long =
-                    (timestampList[timestampList.indexOf(note.executableTimestamp) - 1]) + note.timeOfCreation.toLong()
-//                val date = Date(rebootTimestamp + time)
-//                showLog("rebootTimestamp : $date ")
-//                createNotification(rebootTimestamp + time, note)
-                createNotification(rebootTimestamp + time, note)
-            } else {
-                val date = Date((note.timeOfCreation.toLong() + note.executableTimestamp) + time)
-                showLog("timestamp : $date ")
-                createNotification((note.timeOfCreation.toLong() + note.executableTimestamp) + time, note)
-            }
+        if (lch == LAUNCH_REBOOT) {
+            val rebootTimestamp: Long =
+                (timestampList[timestampList.indexOf(note.executableTimestamp) - 1]) + note.timeOfCreation.toLong()
+            createNotification(rebootTimestamp, note)
+        } else {
+            val date = Date((note.timeOfCreation.toLong() + note.executableTimestamp))
+            showLog("timestamp : $date ")
+            createNotification((note.timeOfCreation.toLong() + note.executableTimestamp), note)
         }
     }
 
-
+    /**
+     * @param timestamp пока оставлю в случае использования аларм менеджер при ребуте
+     */
     private fun createNotification(timestamp: Long, note: Note) {
-        // сдесь должен быть вызов метода интерфейса
-        ReminderWorker.create(applicationContext, note.executableTimestamp , note.noteId)
-//        ReminderManager.startReminder(
-//            applicationContext,
-//            timestamp,
-//            note
-//        )
-    }
-
-    private fun timeСheck(note: Note,callback: (time: Long)->Unit){
-        val time: Long = note.timeOfCreation.toLong() + note.executableTimestamp
-
-        val date = Date(time)
+        val newDate = Date()
+        val noteDate = Date(note.timeOfCreation.toLong() + note.executableTimestamp)
+        // этот код пригодиться для смещения времени в случае создания уведомления ночью
         val calendar = Calendar.getInstance()
-        calendar.time = date
-        showLog("часов : ${calendar.get(Calendar.HOUR_OF_DAY)}")
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-//        if(hour == 23 || hour == 0 || hour < 8){
-        if(hour == 23 || hour < 8){
-//            val t = 32400000L // сделать надо по другому сейчас просто 9 часов
-            callback(0)
+        calendar.time = noteDate
+        val hourNotification = calendar.get(Calendar.HOUR_OF_DAY)
+        showLog("час следующего уведомления $hourNotification")
+        ///////////////////////////////////////////////////////////////////////////////////
+        val remindManager: IReminderManager = RemindManagerOnWorkManager()
+        if (noteDate.time < newDate.time){
+            showLog("Уже поздно")
+            remindManager.startReminder(applicationContext, note, 1000)
+//            ReminderWorker.create(applicationContext, 1000, note.noteId)
         }else{
-            callback(0)
+            // сдесь должен быть вызов метода интерфейса
+            remindManager.startReminder(applicationContext, note, note.executableTimestamp )
+//            ReminderWorker.create(applicationContext, note.executableTimestamp , note.noteId)
         }
     }
 
