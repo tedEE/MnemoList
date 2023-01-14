@@ -11,7 +11,6 @@ import dagger.assisted.AssistedInject
 import ru.jeinmentalist.mail.domain.note.Note
 import ru.jeinmentalist.mail.domain.note.noteUseCase.GetNoteByIdUseCase
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.sendNotification
-import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
 import java.time.Duration
 
 @HiltWorker
@@ -60,7 +59,7 @@ class ReminderWorker @AssistedInject constructor(
             )
         }
 
-        fun cencell(context: Context, tag: String){
+        fun cancell(context: Context, tag: String){
             WorkManager.getInstance(context).cancelAllWorkByTag(tag)
         }
 

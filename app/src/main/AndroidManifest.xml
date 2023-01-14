@@ -18,9 +18,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MentaList">
         <receiver
+            android:name="ru.jeinmentalist.mail.mnemolist.background.TrackTimeChangeReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.TIME_SET"/>
+            </intent-filter>
+        </receiver>
+        <receiver
             android:name="ru.jeinmentalist.mail.mnemolist.background.ShowBigPicReceiver"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
         <receiver
             android:name="ru.jeinmentalist.mail.mnemolist.background.RepetitionNotificationReceiver"
             android:enabled="true"
@@ -33,22 +41,19 @@
         </receiver>
         <receiver
             android:name="ru.jeinmentalist.mail.mnemolist.background.StopNotificationReceiver"
-            android:enabled="true" />
-<!--        <receiver-->
-<!--            android:name="ru.jeinmentalist.mail.mnemolist.background.BootReceiver"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="true"-->
-<!--            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">-->
-<!--            <intent-filter>-->
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-
-<!--                <action android:name="android.intent.action.BOOT_COMPLETED" />-->
-<!--                <action android:name="android.intent.action.QUICKBOOT_POWERON" />-->
-
-<!--                &lt;!&ndash; For HTC devices &ndash;&gt;-->
-<!--                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
+            android:enabled="true" /> <!-- <receiver -->
+        <!-- android:name="ru.jeinmentalist.mail.mnemolist.background.BootReceiver" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true" -->
+        <!-- android:permission="android.permission.RECEIVE_BOOT_COMPLETED"> -->
+        <!-- <intent-filter> -->
+        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+        <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
+        <!-- <action android:name="android.intent.action.QUICKBOOT_POWERON" /> -->
+        <!-- &lt;!&ndash; For HTC devices &ndash;&gt; -->
+        <!-- <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
         <receiver
             android:name="ru.jeinmentalist.mail.mnemolist.background.AlarmReceiver"
             android:enabled="true" />

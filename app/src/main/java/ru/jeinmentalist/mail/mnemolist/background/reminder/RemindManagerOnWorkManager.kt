@@ -9,6 +9,6 @@ class RemindManagerOnWorkManager : IReminderManager {
     }
 
     override fun stopReminder(context: Context, reminderId: Int) {
-        ReminderWorker.cencell(context, reminderId.toString())
+        ReminderWorker.cancell(context, reminderId.toString())
     }
 }
