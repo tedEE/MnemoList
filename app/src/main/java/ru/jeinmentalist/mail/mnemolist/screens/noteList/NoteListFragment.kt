@@ -7,13 +7,16 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import ru.jeinmentalist.mail.domain.note.Note
 import ru.jeinmentalist.mail.domain.profile.Profile
 import ru.jeinmentalist.mail.mentalist.databinding.FragmentNoteListBinding
+import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showToast
 import ru.jeinmentalist.mail.mnemolist.contract.Options
 import ru.jeinmentalist.mail.mnemolist.base.BaseFragment
@@ -64,6 +67,11 @@ class NoteListFragment : BaseFragment<FragmentNoteListBinding>(FragmentNoteListB
             }
             notesAdapter.onItemNoteListClickListener = {
                 showDescriptionDialogFragment(it)
+                val workInfo = WorkManager
+                    .getInstance(requireContext())
+                    .getWorkInfosByTag(it.noteId.toString())
+                showToast(requireContext(), "статус воркера ${workInfo.get().last().state}")
+                showLog("статус воркера ${workInfo.get().last().state}")
             }
         }
     }

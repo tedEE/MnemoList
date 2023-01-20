@@ -173,7 +173,7 @@ class MakeAlarmManagerWorker @AssistedInject constructor(
         }
 
         private fun makeRequest(ids: IntArray, launch: Int): OneTimeWorkRequest {
-            return OneTimeWorkRequestBuilder<MakeAlarmWorker>()
+            return OneTimeWorkRequestBuilder<MakeAlarmManagerWorker>()
                 .setInputData(workDataOf(IDS to ids, LAUNCH to launch))
 //                .setConstraints(makeConstrains()) задать ограничения
                 .build()

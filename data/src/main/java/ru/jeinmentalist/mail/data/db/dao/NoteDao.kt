@@ -2,9 +2,9 @@ package ru.jeinmentalist.mail.data.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.Flow
 import ru.jeinmentalist.mail.data.db.model.NoteEntity
+import ru.jeinmentalist.mail.data.db.model.TimestampEntity
 
 @Dao
 interface NoteDao {
@@ -26,6 +26,9 @@ interface NoteDao {
 
     @Delete(entity = NoteEntity::class)
     fun deleteNote(entity: NoteEntity)
+
+//    @Query("SELECT * FROM ${NoteEntity.TABLE_NAME_NOTE} WHERE note_id = :id" )
+//    fun getNoteById(id: Int): NoteEntity
 
     @Query("SELECT * FROM ${NoteEntity.TABLE_NAME_NOTE} WHERE note_id = :id" )
     fun getNoteById(id: Int): NoteEntity
