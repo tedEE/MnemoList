@@ -7,7 +7,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import ru.jeinmentalist.mail.domain.note.Note
 import ru.jeinmentalist.mail.domain.note.noteUseCase.GetNoteByIdUseCase
-import ru.jeinmentalist.mail.domain.note.noteUseCase.UpdateNoteExecutableTimestampUseCase
+import ru.jeinmentalist.mail.domain.note.noteUseCase.UpdateNoteNextTimestampUseCase
+
 import ru.jeinmentalist.mail.domain.note.noteUseCase.UpdateNoteStateUseCase
 import ru.jeinmentalist.mail.domain.profile.profileUseCase.ChangeCompletedEntriesUseCase
 import ru.jeinmentalist.mail.domain.profile.profileUseCase.CounterEntriesParams
@@ -26,7 +27,7 @@ class MakeAlarmManagerWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted val workerParameters: WorkerParameters,
     val mGetNoteById: GetNoteByIdUseCase,
-    val mUpdateNote: UpdateNoteExecutableTimestampUseCase,
+    val mUpdateNote: UpdateNoteNextTimestampUseCase,
     val mUpdateNoteState: UpdateNoteStateUseCase,
     val mLoadTimestampList: LoadTimestampListUseCase,
     val mChangeCompletedEntries: ChangeCompletedEntriesUseCase
@@ -39,50 +40,51 @@ class MakeAlarmManagerWorker @AssistedInject constructor(
         lch = workerParameters.inputData.getInt(LAUNCH, 0)
         ids?.map { id: Int ->
             mGetNoteById(GetNoteByIdUseCase.Params(id)) {
+//                it.either(::handleFailure, ::handleNote)
                 it.either(::handleFailure, ::handleNote)
             }
         }
     }
 
     private fun handleNote(note: Note) {
-        if (note.state != Note.DONE) {
-//            createNotification(note)
-            getListTimestamp(note) { listTimestamp: List<Long> ->
-                val sortList = listTimestamp.sorted()
-                // сдесь переодически падает изза пустого листа
-                when (lch) {
-                    LAUNCH_CREATION -> {
-                        notificationHandler(note, sortList)
-//                        createNotification(note)
-                        changeExecutableTimestamp(note, sortList)
-                    }
-                    LAUNCH_REPETITION -> {
-                        notificationHandler(note, sortList)
-//                        createNotification(note)
-                        if (note.executableTimestamp == sortList.last()) {
-                            changeNoteState(note)
-                        } else {
-                            changeExecutableTimestamp(note, sortList)
-                        }
-                    }
-                    LAUNCH_REBOOT -> {
-                        notificationHandler(note, sortList)
-//                        createNotification(note)
-                    }
-                }
-
-//                if (note.executableTimestamp == sortList.last()) {
-//                    changeNoteState(note)
-//                } else {
-//                    if (lch == LAUNCH_REPETITION)
+//        if (note.state != Note.DONE) {
+////            createNotification(note)
+//            getListTimestamp(note) { listTimestamp: List<Long> ->
+//                val sortList = listTimestamp.sorted()
+//                // сдесь переодически падает изза пустого листа
+//                when (lch) {
+//                    LAUNCH_CREATION -> {
+//                        notificationHandler(note, sortList)
+////                        createNotification(note)
 //                        changeExecutableTimestamp(note, sortList)
+//                    }
+//                    LAUNCH_REPETITION -> {
+//                        notificationHandler(note, sortList)
+////                        createNotification(note)
+//                        if (note.nextRunningTimestamp == sortList.last()) {
+//                            changeNoteState(note)
+//                        } else {
+//                            changeExecutableTimestamp(note, sortList)
+//                        }
+//                    }
+//                    LAUNCH_REBOOT -> {
+//                        notificationHandler(note, sortList)
+////                        createNotification(note)
+//                    }
 //                }
-            }
-        } else {
-            changeCompletedEntries(note)
-            sendLastNotification(applicationContext)
-            mUpdateNote(UpdateNoteExecutableTimestampUseCase.Params(note.noteId, -1))
-        }
+//
+////                if (note.executableTimestamp == sortList.last()) {
+////                    changeNoteState(note)
+////                } else {
+////                    if (lch == LAUNCH_REPETITION)
+////                        changeExecutableTimestamp(note, sortList)
+////                }
+//            }
+//        } else {
+//            changeCompletedEntries(note)
+//            sendLastNotification(applicationContext)
+////            mUpdateNote(UpdateNoteNextTimestampUseCase.Params(note.noteId, -1))
+//        }
     }
 
     private fun getListTimestamp(note: Note, successful: (List<Long>) -> Unit) {
@@ -95,15 +97,15 @@ class MakeAlarmManagerWorker @AssistedInject constructor(
 
     private fun changeExecutableTimestamp(note: Note, list: List<Long>) {
         for (i in list) {
-            if (i > note.executableTimestamp) {
-                mUpdateNote(UpdateNoteExecutableTimestampUseCase.Params(note.noteId, i))
+            if (i > note.nextRunningTimestamp) {
+//                mUpdateNote(UpdateNoteNextTimestampUseCase.Params(note.noteId, i))
                 break
             }
         }
     }
 
     private fun changeNoteState(note: Note) {
-        mUpdateNoteState(UpdateNoteStateUseCase.Param(note.noteId, Note.DONE))
+//        mUpdateNoteState(UpdateNoteStateUseCase.Param(note.noteId, Note.DONE))
     }
 
     private fun changeCompletedEntries(note: Note) {
@@ -115,15 +117,15 @@ class MakeAlarmManagerWorker @AssistedInject constructor(
         timeСheck(note){ time ->
             if (lch == LAUNCH_REBOOT) {
                 val rebootTimestamp: Long =
-                    (timestampList[timestampList.indexOf(note.executableTimestamp) - 1]) + note.timeOfCreation.toLong()
+                    (timestampList[timestampList.indexOf(note.nextRunningTimestamp) - 1]) + note.timeOfCreation.toLong()
 //                val date = Date(rebootTimestamp + time)
 //                showLog("rebootTimestamp : $date ")
 //                createNotification(rebootTimestamp + time, note)
                 createNotification(rebootTimestamp + time, note)
             } else {
-                val date = Date((note.timeOfCreation.toLong() + note.executableTimestamp) + time)
+                val date = Date((note.timeOfCreation.toLong() + note.nextRunningTimestamp) + time)
                 showLog("timestamp : $date ")
-                createNotification((note.timeOfCreation.toLong() + note.executableTimestamp) + time, note)
+                createNotification((note.timeOfCreation.toLong() + note.nextRunningTimestamp) + time, note)
             }
         }
     }
@@ -138,7 +140,7 @@ class MakeAlarmManagerWorker @AssistedInject constructor(
     }
 
     private fun timeСheck(note: Note,callback: (time: Long)->Unit){
-        val time: Long = note.timeOfCreation.toLong() + note.executableTimestamp
+        val time: Long = note.timeOfCreation.toLong() + note.nextRunningTimestamp
 
         val date = Date(time)
         val calendar = Calendar.getInstance()

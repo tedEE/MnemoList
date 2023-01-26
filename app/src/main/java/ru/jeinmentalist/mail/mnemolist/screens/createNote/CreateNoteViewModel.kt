@@ -54,9 +54,10 @@ class CreateNoteViewModel @Inject constructor(
                         descriptor,
                         profileId,
                         System.currentTimeMillis().toString(),
-                        getMinimalTimestamp(mapTimestampList(it)),
-                        Note.PERFORMED,
-                        pathImage
+                        nextRunningTimestamp = getMinimalTimestamp(mapTimestampList(it)),
+                        currentRunningTimestamp = System.currentTimeMillis(),
+                        state = Note.RUNNING,
+                        pathImage = pathImage
                     )
                 ) {
                     it.either(::handleFailure,::updateNoteIdLiveData)

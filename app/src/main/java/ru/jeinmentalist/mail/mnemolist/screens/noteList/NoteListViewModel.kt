@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.jeinmentalist.mail.domain.note.Note
 import ru.jeinmentalist.mail.domain.note.noteUseCase.DeleteNoteUseCase
-import ru.jeinmentalist.mail.domain.note.noteUseCase.GetNoteByProfileIdUseCase
 import ru.jeinmentalist.mail.domain.note.noteUseCase.GetNotesFlowUseCase
 import ru.jeinmentalist.mail.domain.note.noteUseCase.NoteUseCases
 import ru.jeinmentalist.mail.domain.profile.profileUseCase.CounterEntriesParams
@@ -20,7 +19,6 @@ import ru.jeinmentalist.mail.domain.profile.profileUseCase.DecrementCounterRunni
 import ru.jeinmentalist.mail.domain.type.ITransmitted
 import ru.jeinmentalist.mail.mnemolist.base.BaseViewModel
 import ru.jeinmentalist.mail.mnemolist.utils.convertTransmittedFromNote
-import ru.jeinmentalist.mail.mnemolist.utils.convertTransmittedFromProfile
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,7 +45,7 @@ class NoteListViewModel @Inject constructor(
             it.either(::handleFailure){
                 if (note.state == Note.DONE){
                     decrementCompleteEntries(CounterEntriesParams(note.profId))
-                }else if (note.state == Note.PERFORMED){
+                }else if (note.state == Note.RUNNING){
                     decrementRunngEntries(CounterEntriesParams(note.profId))
                 }
 

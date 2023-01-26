@@ -44,7 +44,7 @@ class NoteListAdapter : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(NoteIt
             location.text = item.location
             // измение цвета иконки удаление
             val porterDuffColorFilter = PorterDuffColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP)
-            if (item.executableTimestamp > 0L){
+            if (item.nextRunningTimestamp> 0L){
                 iconDelete.colorFilter = porterDuffColorFilter
             }
         }

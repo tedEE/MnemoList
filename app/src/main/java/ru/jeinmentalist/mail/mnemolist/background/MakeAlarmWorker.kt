@@ -7,7 +7,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import ru.jeinmentalist.mail.domain.note.Note
 import ru.jeinmentalist.mail.domain.note.noteUseCase.GetNoteByIdUseCase
-import ru.jeinmentalist.mail.domain.note.noteUseCase.UpdateNoteExecutableTimestampUseCase
+import ru.jeinmentalist.mail.domain.note.noteUseCase.UpdateNoteNextTimestampUseCase
 import ru.jeinmentalist.mail.domain.note.noteUseCase.UpdateNoteStateUseCase
 import ru.jeinmentalist.mail.domain.profile.profileUseCase.ChangeCompletedEntriesUseCase
 import ru.jeinmentalist.mail.domain.profile.profileUseCase.CounterEntriesParams
@@ -18,19 +18,22 @@ import ru.jeinmentalist.mail.mnemolist.background.reminder.IReminderManager
 import ru.jeinmentalist.mail.mnemolist.background.reminder.RemindManagerOnWorkManager
 import ru.jeinmentalist.mail.mnemolist.base.BaseWorker
 import java.util.*
+import javax.inject.Inject
 
 @HiltWorker
 class MakeAlarmWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted val workerParameters: WorkerParameters,
     val mGetNoteById: GetNoteByIdUseCase,
-    val mUpdateNote: UpdateNoteExecutableTimestampUseCase,
+    val mUpdateNote: UpdateNoteNextTimestampUseCase,
     val mUpdateNoteState: UpdateNoteStateUseCase,
     val mLoadTimestampList: LoadTimestampListUseCase,
     val mChangeCompletedEntries: ChangeCompletedEntriesUseCase,
 ) : BaseWorker(context, workerParameters) {
 
     private var lch: Int = 0
+
+    @Inject lateinit var remindManager: IReminderManager
 
     override fun resultSuccess() {
         val ids = workerParameters.inputData.getIntArray(IDS)
@@ -43,34 +46,42 @@ class MakeAlarmWorker @AssistedInject constructor(
     }
 
     private fun handleNote(note: Note) {
-        if (note.state != Note.DONE) {
-            getListTimestamp(note) { listTimestamp: List<Long> ->
-                val sortList = listTimestamp.sorted()
-                // сдесь переодически падает изза пустого листа
-                when (lch) {
-                    LAUNCH_CREATION -> {
-                        notificationHandler(note, sortList)
-//                        createNotification(note)
-                        changeExecutableTimestamp(note, sortList)
-                    }
-                    LAUNCH_REPETITION -> {
-                        notificationHandler(note, sortList)
-                        if (note.executableTimestamp == sortList.last()) {
-                            changeNoteState(note)
-                        } else {
-                            changeExecutableTimestamp(note, sortList)
-                        }
-                    }
-                    LAUNCH_REBOOT -> {
-                        notificationHandler(note, sortList)
-                    }
-                }
-            }
-        } else {
-            changeCompletedEntries(note)
-            sendLastNotification(applicationContext)
-            mUpdateNote(UpdateNoteExecutableTimestampUseCase.Params(note.noteId, -1))
-        }
+//        if (note.state != Note.DONE) {
+//            showLog("время выполнения ${note.nextRunningTimestamp}")
+//            note.changeNextExecutableTimestamp()
+//            showLog("время выполнения ${note.nextRunningTimestamp}")
+//            note.changeNextExecutableTimestamp()
+//            showLog("время выполнения ${note.nextRunningTimestamp}")
+//            note.changeNextExecutableTimestamp()
+//            showLog("время выполнения ${note.nextRunningTimestamp}")
+
+//            getListTimestamp(note) { listTimestamp: List<Long> ->
+//                val sortList = listTimestamp.sorted()
+//                // сдесь переодически падает изза пустого листа
+//                when (lch) {
+//                    LAUNCH_CREATION -> {
+//                        notificationHandler(note, sortList)
+////                        createNotification(note)
+//                        changeExecutableTimestamp(note, sortList)
+//                    }
+//                    LAUNCH_REPETITION -> {
+//                        notificationHandler(note, sortList)
+//                        if (note.executableTimestamp == sortList.last()) {
+//                            changeNoteState(note)
+//                        } else {
+//                            changeExecutableTimestamp(note, sortList)
+//                        }
+//                    }
+//                    LAUNCH_REBOOT -> {
+//                        notificationHandler(note, sortList)
+//                    }
+//                }
+//            }
+//        } else {
+//            changeCompletedEntries(note)
+//            sendLastNotification(applicationContext)
+//            mUpdateNote(UpdateNoteNextTimestampUseCase.Params(note.noteId, -1))
+//        }
     }
 
     private fun getListTimestamp(note: Note, successful: (List<Long>) -> Unit) {
@@ -83,15 +94,15 @@ class MakeAlarmWorker @AssistedInject constructor(
 
     private fun changeExecutableTimestamp(note: Note, list: List<Long>) {
         for (i in list) {
-            if (i > note.executableTimestamp) {
-                mUpdateNote(UpdateNoteExecutableTimestampUseCase.Params(note.noteId, i))
+            if (i > note.nextRunningTimestamp) {
+//                mUpdateNote(UpdateNoteNextTimestampUseCase.Params(note.noteId, i))
                 break
             }
         }
     }
 
     private fun changeNoteState(note: Note) {
-        mUpdateNoteState(UpdateNoteStateUseCase.Param(note.noteId, Note.DONE))
+//        mUpdateNoteState(UpdateNoteStateUseCase.Param(note.noteId, Note.DONE))
     }
 
     private fun changeCompletedEntries(note: Note) {
@@ -101,12 +112,12 @@ class MakeAlarmWorker @AssistedInject constructor(
     private fun notificationHandler(note: Note, timestampList: List<Long>) {
         if (lch == LAUNCH_REBOOT) {
             val rebootTimestamp: Long =
-                (timestampList[timestampList.indexOf(note.executableTimestamp) - 1]) + note.timeOfCreation.toLong()
+                (timestampList[timestampList.indexOf(note.nextRunningTimestamp) - 1]) + note.timeOfCreation.toLong()
             createNotification(rebootTimestamp, note)
         } else {
-            val date = Date((note.timeOfCreation.toLong() + note.executableTimestamp))
+            val date = Date((note.timeOfCreation.toLong() + note.nextRunningTimestamp))
             showLog("timestamp : $date ")
-            createNotification((note.timeOfCreation.toLong() + note.executableTimestamp), note)
+            createNotification((note.timeOfCreation.toLong() + note.nextRunningTimestamp), note)
         }
     }
 
@@ -115,21 +126,21 @@ class MakeAlarmWorker @AssistedInject constructor(
      */
     private fun createNotification(timestamp: Long, note: Note) {
         val newDate = Date()
-        val noteDate = Date(note.timeOfCreation.toLong() + note.executableTimestamp)
+        val noteDate = Date(note.timeOfCreation.toLong() + note.nextRunningTimestamp)
         // этот код пригодиться для смещения времени в случае создания уведомления ночью
         val calendar = Calendar.getInstance()
         calendar.time = noteDate
         val hourNotification = calendar.get(Calendar.HOUR_OF_DAY)
         showLog("час следующего уведомления $hourNotification")
         ///////////////////////////////////////////////////////////////////////////////////
-        val remindManager: IReminderManager = RemindManagerOnWorkManager()
+//        val remindManager: IReminderManager = RemindManagerOnWorkManager()
         if (noteDate.time < newDate.time){
             showLog("Уже поздно")
-            remindManager.startReminder(applicationContext, note, 1000)
+//            remindManager.startReminder(applicationContext, note, 1000)
 //            ReminderWorker.create(applicationContext, 1000, note.noteId)
         }else{
             // сдесь должен быть вызов метода интерфейса
-            remindManager.startReminder(applicationContext, note, note.executableTimestamp )
+//            remindManager.startReminder(applicationContext, note, note.nextRunningTimestamp )
 //            ReminderWorker.create(applicationContext, note.executableTimestamp , note.noteId)
         }
     }

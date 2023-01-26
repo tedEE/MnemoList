@@ -5,7 +5,7 @@ data class NoteUseCases (
     val getNoteById: GetNoteByIdUseCase,
     val getNoteByProfileId: GetNoteByProfileIdUseCase,
     val getNoteList: GetNoteListUseCase,
-    val updateNote: UpdateNoteExecutableTimestampUseCase,
+    val updateNext: UpdateNoteNextTimestampUseCase,
     val deleteNote: DeleteNoteUseCase,
     val getNotesFlow: GetNotesFlowUseCase
 )

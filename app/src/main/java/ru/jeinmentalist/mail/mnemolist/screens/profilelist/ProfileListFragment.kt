@@ -20,9 +20,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.jeinmentalist.mail.domain.profile.Profile
 import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mentalist.databinding.FragmentProfileListBinding
+import ru.jeinmentalist.mail.mnemolist.MainActivity
 import ru.jeinmentalist.mail.mnemolist.base.BaseFragment
 import ru.jeinmentalist.mail.mnemolist.contract.*
 import ru.jeinmentalist.mail.mnemolist.screens.FabMenuFragment
+import ru.jeinmentalist.mail.mnemolist.screens.checkeNoteAlarm.CheckAlarmFragment
 import ru.jeinmentalist.mail.mnemolist.utils.ExitWithAnimation
 import ru.jeinmentalist.mail.mnemolist.utils.enterReveal
 import ru.jeinmentalist.mail.mnemolist.utils.exitReveal
@@ -224,7 +226,6 @@ class ProfileListFragment :
 
     override fun createCarts() {
         closeMenu {
-
         }
     }
 

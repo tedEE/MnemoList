@@ -9,30 +9,53 @@ data class Note(
     val description: String,
     val profId: String,
     val timeOfCreation: String,
-    val executableTimestamp: Long, // выполня           емая временная метка
-    val state: Int,
+    var currentRunningTimestamp: Long,
+    var nextRunningTimestamp: Long,
+    var state: Int,
     val pathImage: String,
     val timestampList: List<Timestamp> = listOf()
 ):ITransmitted {
 
-    private fun getSortedTimestampList(): List<Long>{
+    fun getSortedTimestampList(): List<Long>{
         val list = timestampList.map { ts: Timestamp -> ts.executionTime }
         return list.sorted()
     }
 
-    fun getNextExecutableTimestamp(): Long{
-        var nextExecutableTimestamp: Long = 0
-        for (i in getSortedTimestampList()) {
-            if (i > executableTimestamp) {
-                nextExecutableTimestamp = i
+    fun changeNextExecutableTimestamp(){
+        for (i in getSortedTimestampList()){
+            if (i > nextRunningTimestamp){
+                nextRunningTimestamp = i
                 break
             }
         }
-        return nextExecutableTimestamp
+    }
+
+    fun checkDoneNote(): Boolean{
+        return state == DONE
+    }
+
+    fun checkRunningNote(): Boolean{
+        return state == RUNNING
+    }
+
+    fun changeСurrentExecutableTimestamp(){
+    }
+
+    fun changeState(state: State){
+        when(state){
+            State.RUNNING -> this.state = 1
+            State.CANSELED -> this.state = 2
+            State.DONE -> this.state = 0
+        }
+    }
+
+    enum class State{
+        RUNNING, CANSELED, DONE
     }
 
     companion object{
-        const val PERFORMED = 1
+        const val RUNNING = 1
+        const val CANSELED = 2
         const val DONE = 0
     }
 }

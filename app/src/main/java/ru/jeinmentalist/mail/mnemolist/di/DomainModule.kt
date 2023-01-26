@@ -25,7 +25,7 @@ class DomainModule {
             GetNoteByIdUseCase(repository),
             GetNoteByProfileIdUseCase(repository),
             GetNoteListUseCase(repository),
-            UpdateNoteExecutableTimestampUseCase(repository),
+            UpdateNoteNextTimestampUseCase(repository),
             DeleteNoteUseCase(repository),
             GetNotesFlowUseCase(repository)
         )

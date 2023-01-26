@@ -6,11 +6,11 @@ import ru.jeinmentalist.mail.domain.type.None
 import ru.jeinmentalist.mail.domain.type.exception.Failure
 import ru.jeinmentalist.mail.domain.usecase.UseCase
 
-class UpdateNoteExecutableTimestampUseCase(private val repository: INoteRepository) : UseCase<UpdateNoteExecutableTimestampUseCase.Params, None>() {
+class UpdateNoteNextTimestampUseCase(private val repository: INoteRepository) : UseCase<UpdateNoteNextTimestampUseCase.Params, None>() {
 
     override suspend fun run(params: Params): Either<Failure, None> {
-        return repository.updateExecutableTimestamp(params.noteId, params.executableTimestamp)
+        return repository.updateNextTimestamp(params.noteId, params.nextTimestamp, params.state)
     }
 
-    data class Params(val noteId: Int, val executableTimestamp: Long)
+    data class Params(val noteId: Int, val nextTimestamp: Long, val state: Int)
 }

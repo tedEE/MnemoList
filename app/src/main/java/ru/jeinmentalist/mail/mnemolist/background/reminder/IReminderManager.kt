@@ -6,10 +6,17 @@ import ru.jeinmentalist.mail.domain.note.Note
 interface IReminderManager {
     fun startReminder(
         context: Context,
-        note: Note,
-        timeReminder: Long,
+        noteId: Int,
+        timeReminder: Long = 0,
         reminderId: Int = REMINDER_NOTIFICATION_REQUEST_CODE
     )
+
+    fun repeatReminder(
+        context: Context,
+        noteId: Int,
+    )
+
+    fun canncelReminde(noteId: Int)
 
     fun stopReminder(
         context: Context,

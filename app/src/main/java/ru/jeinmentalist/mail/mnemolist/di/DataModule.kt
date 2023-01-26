@@ -23,6 +23,8 @@ import ru.jeinmentalist.mail.domain.profile.profileUseCase.ChangeRunningEntriesU
 import ru.jeinmentalist.mail.domain.profile.profileUseCase.GetProfileByIdUseCase
 import ru.jeinmentalist.mail.domain.timestamp.ITimestampRepository
 import ru.jeinmentalist.mail.domain.timestamp.timstampUseCase.LoadTimestampListUseCase
+import ru.jeinmentalist.mail.mnemolist.background.reminder.IReminderManager
+import ru.jeinmentalist.mail.mnemolist.background.reminder.RemindManagerOnWorkManager
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -40,6 +42,11 @@ class DataModule {
 //            .addCallback(MnemoListDatabase.DB_CALLBACK)
                 .build()
            return database
+    }
+
+    @Provides
+    fun provideAddNote(repository: INoteRepository): AddNoteUseCase{
+        return AddNoteUseCase(repository)
     }
 
     @Provides
@@ -68,8 +75,8 @@ class DataModule {
     }
 
     @Provides
-    fun provideUpdateNote(repository: INoteRepository): UpdateNoteExecutableTimestampUseCase{
-        return UpdateNoteExecutableTimestampUseCase(repository)
+    fun provideUpdateNote(repository: INoteRepository): UpdateNoteNextTimestampUseCase{
+        return UpdateNoteNextTimestampUseCase(repository)
     }
 
     @Provides
@@ -110,6 +117,13 @@ class DataModule {
     @Provides
     fun provideTimestampDao(database: MnemoListDatabase): TimestampDao{
         return database.timestampDao()
+    }
+
+    @Provides
+    fun provideRemindManager(getNote: GetNoteByIdUseCase,
+                             updateNote: UpdateNoteNextTimestampUseCase,
+                             updateState: UpdateNoteStateUseCase): IReminderManager{
+        return RemindManagerOnWorkManager(getNote, updateNote, updateState)
     }
 
 }

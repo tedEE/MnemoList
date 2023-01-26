@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.jeinmentalist.mail.data.db.dao.NoteDao
 import ru.jeinmentalist.mail.data.db.model.NoteEntity
+import ru.jeinmentalist.mail.data.db.model.TimestampEntity
 import ru.jeinmentalist.mail.data.db.model.map
 import ru.jeinmentalist.mail.domain.note.INoteRepository
 import ru.jeinmentalist.mail.domain.note.Note
@@ -18,7 +19,8 @@ class NoteRepositoryImpl(private val dao: NoteDao) : INoteRepository {
         description: String,
         profId: String,
         timeOfCreation: String,
-        executableTimestamp: Long,
+        currentRunningTimestamp: Long,
+        nextRunningTimestamp: Long,
         state: Int,
         pathImage: String
     ): Either<Failure, Int> {
@@ -28,7 +30,8 @@ class NoteRepositoryImpl(private val dao: NoteDao) : INoteRepository {
                 description = description,
                 profId = profId,
                 timeOfCreation = timeOfCreation,
-                executableTimestamp = executableTimestamp,
+                currentRunningTimestamp = currentRunningTimestamp,
+                nextRunningTimestamp = nextRunningTimestamp,
                 state = state,
                 pathImage = pathImage
             )
@@ -37,8 +40,12 @@ class NoteRepositoryImpl(private val dao: NoteDao) : INoteRepository {
     }
 
     override fun getById(id: Int): Either<Failure, Note> {
-        val noteEntity = dao.getNoteById(id)
-        return Either.Right(noteEntity.map())
+//        val noteEntity = dao.getNoteById(id)
+//        return Either.Right(noteEntity.map())
+        val noteMap = dao.getNoteAndTimestampList(id)
+        val note: NoteEntity = noteMap.keys.toList()[0]
+        val list: List<TimestampEntity> = noteMap[note] ?: listOf()
+        return Either.Right(note.map(list))
     }
 
     override fun getList(): Either<Failure, List<Note>> {
@@ -60,11 +67,12 @@ class NoteRepositoryImpl(private val dao: NoteDao) : INoteRepository {
         return Either.Right(flow)
     }
 
-    override fun updateExecutableTimestamp(
+    override fun updateNextTimestamp(
         id: Int,
-        executableTimestamp: Long
+        nextTimestamp: Long,
+        state: Int
     ): Either<Failure, None> {
-        dao.updateNoteExecutableTimestamp(id, executableTimestamp)
+        dao.updateNoteNextTimestamp(id, nextTimestamp, state)
         return Either.Right(None())
     }
 
@@ -86,7 +94,8 @@ class NoteRepositoryImpl(private val dao: NoteDao) : INoteRepository {
                 description = note.description,
                 profId = note.profId,
                 timeOfCreation = note.timeOfCreation,
-                executableTimestamp = note.executableTimestamp,
+                currentRunningTimestamp = note.currentRunningTimestamp,
+                nextRunningTimestamp = note.nextRunningTimestamp,
                 state = note.state,
                 pathImage = note.pathImage
                 )

@@ -15,8 +15,7 @@ const val dbForMobile = "mnemo_list_database"
 @Database(
     entities = [NoteEntity::class, ProfileEntity::class, TimestampEntity::class],
     version = 2,
-    exportSchema = true,
-    autoMigrations = [AutoMigration(from = 1, to = 2)]
+    exportSchema = true
 )
 abstract class MnemoListDatabase : RoomDatabase() {
 

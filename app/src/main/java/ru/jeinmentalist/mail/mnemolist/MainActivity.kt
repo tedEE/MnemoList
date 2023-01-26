@@ -145,8 +145,8 @@ class MainActivity : AppCompatActivity(), Navigator {
             return@setOnMenuItemClickListener true
         }
     }
-
-    private fun launchFragment(fragment: Fragment) {
+    // добавить private
+    fun launchFragment(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(  // нужнор создать анимации переходов

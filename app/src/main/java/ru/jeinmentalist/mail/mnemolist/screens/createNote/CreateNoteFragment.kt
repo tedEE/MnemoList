@@ -14,11 +14,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+import ru.jeinmentalist.mail.domain.note.Note
 import ru.jeinmentalist.mail.domain.profile.Profile
 import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mentalist.databinding.FragmentCreateNoteBinding
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
 import ru.jeinmentalist.mail.mnemolist.background.MakeAlarmWorker
+import ru.jeinmentalist.mail.mnemolist.background.reminder.IReminderManager
+import ru.jeinmentalist.mail.mnemolist.background.reminder.RemindManagerOnWorkManager
 import ru.jeinmentalist.mail.mnemolist.base.BaseFragment
 import ru.jeinmentalist.mail.mnemolist.contract.*
 import ru.jeinmentalist.mail.mnemolist.utils.ExitWithAnimation
@@ -26,6 +29,7 @@ import ru.jeinmentalist.mail.mnemolist.utils.exitCircularReveal
 import ru.jeinmentalist.mail.mnemolist.utils.startBackgroundColorAnimation
 import ru.jeinmentalist.mail.mnemolist.utils.startCircularReveal
 import java.io.File
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -36,6 +40,7 @@ class CreateNoteFragment :
     ExitWithAnimation {
 
     private lateinit var mOptions: Options
+    @Inject lateinit var remMan: IReminderManager
     private var mPathImage: String = ""
     private var mProfileList: List<Profile>? = null
     private val mCreateNoteViewModel: CreateNoteViewModel by viewModels()
@@ -78,12 +83,12 @@ class CreateNoteFragment :
         super.onViewCreated(view, savedInstanceState)
 
         mCreateNoteViewModel.profileListLiveData.observe(
-            viewLifecycleOwner,
-            { listProfile: List<Profile> ->
-                mProfileList = listProfile
-                val adapter = SpinnerAdapter(mProfileList ?: listOf())
-                binding.profileSpinner.adapter = adapter
-            })
+            viewLifecycleOwner
+        ) { listProfile: List<Profile> ->
+            mProfileList = listProfile
+            val adapter = SpinnerAdapter(mProfileList ?: listOf())
+            binding.profileSpinner.adapter = adapter
+        }
 
         binding.profileSpinner.onItemSelectedListener = OnItemSelectedListener {
             hideKeyboard(binding.enterDescriptionNote)
@@ -173,11 +178,12 @@ class CreateNoteFragment :
             )
             /////////////////////////////
             mCreateNoteViewModel.mNoteIdLiveData.observe(viewLifecycleOwner, Observer {
-                MakeAlarmWorker.create(
-                    requireContext(),
-                    intArrayOf(it),
-                    MakeAlarmWorker.LAUNCH_CREATION
-                )
+                remMan.startReminder(requireContext(), it)
+//                MakeAlarmWorker.create(
+//                    requireContext(),
+//                    intArrayOf(it),
+//                    MakeAlarmWorker.LAUNCH_CREATION
+//                )
             })
         }
     }
