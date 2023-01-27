@@ -43,9 +43,13 @@ class NoteListAdapter : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(NoteIt
         fun binding(item: Note){
             location.text = item.location
             // измение цвета иконки удаление
-            val porterDuffColorFilter = PorterDuffColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP)
-            if (item.nextRunningTimestamp> 0L){
-                iconDelete.colorFilter = porterDuffColorFilter
+            val red = PorterDuffColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP)
+            val black = PorterDuffColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
+            val ltgray = PorterDuffColorFilter(Color.LTGRAY, PorterDuff.Mode.SRC_ATOP)
+            when(item.state){
+                Note.Canceled().state -> iconDelete.colorFilter = ltgray
+                Note.Done().state -> iconDelete.colorFilter = black
+                Note.Running().state -> iconDelete.colorFilter = red
             }
         }
     }

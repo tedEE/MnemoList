@@ -43,19 +43,24 @@ data class Note(
 
     fun changeState(state: State){
         when(state){
-            State.RUNNING -> this.state = 1
-            State.CANSELED -> this.state = 2
-            State.DONE -> this.state = 0
+            is Running -> this.state = RUNNING
+            is Canceled -> this.state = CANCELED
+            is Done -> this.state = DONE
         }
     }
 
-    enum class State{
-        RUNNING, CANSELED, DONE
-    }
+    sealed class State(val state: Int)
+        class Running: State(RUNNING)
+        class Canceled: State(CANCELED)
+        class Done: State(DONE)
 
-    companion object{
+//    enum class State{
+//        RUNNING, CANSELED, DONE
+//    }
+
+    private companion object{
         const val RUNNING = 1
-        const val CANSELED = 2
+        const val CANCELED = 2
         const val DONE = 0
     }
 }

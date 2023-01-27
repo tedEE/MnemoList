@@ -56,7 +56,7 @@ class CreateNoteViewModel @Inject constructor(
                         System.currentTimeMillis().toString(),
                         nextRunningTimestamp = getMinimalTimestamp(mapTimestampList(it)),
                         currentRunningTimestamp = System.currentTimeMillis(),
-                        state = Note.RUNNING,
+                        state = Note.Canceled().state,
                         pathImage = pathImage
                     )
                 ) {

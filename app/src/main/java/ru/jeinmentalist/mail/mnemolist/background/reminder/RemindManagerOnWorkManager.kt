@@ -31,7 +31,7 @@ class RemindManagerOnWorkManager(
             it.either({}){ note: Note ->
                 if(note.nextRunningTimestamp == note.getSortedTimestampList().last()){
                     showLog("надо изменить состояние")
-                    note.changeState(Note.State.DONE)
+                    note.changeState(Note.Done())
                     showLog("состояние ${note.state}")
                 }
                 note.changeСurrentExecutableTimestamp()
@@ -60,7 +60,7 @@ class RemindManagerOnWorkManager(
     }
 
     override fun canncelReminde(noteId: Int) {
-        updateNoteState(UpdateNoteStateUseCase.Param(noteId, Note.CANSELED))
+        updateNoteState(UpdateNoteStateUseCase.Param(noteId, Note.Canceled().state))
     }
 
     private fun checkTime(note: Note): Boolean {
