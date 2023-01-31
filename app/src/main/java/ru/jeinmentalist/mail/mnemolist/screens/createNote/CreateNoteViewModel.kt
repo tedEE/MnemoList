@@ -13,7 +13,6 @@ import ru.jeinmentalist.mail.domain.note.Note
 import ru.jeinmentalist.mail.domain.note.noteUseCase.AddNoteUseCase
 import ru.jeinmentalist.mail.domain.note.noteUseCase.NoteUseCases
 import ru.jeinmentalist.mail.domain.profile.Profile
-import ru.jeinmentalist.mail.domain.profile.profileUseCase.CounterEntriesParams
 import ru.jeinmentalist.mail.domain.profile.profileUseCase.ProfileUseCases
 import ru.jeinmentalist.mail.domain.timestamp.Timestamp
 import ru.jeinmentalist.mail.domain.timestamp.timstampUseCase.LoadTimestampListUseCase
@@ -63,7 +62,7 @@ class CreateNoteViewModel @Inject constructor(
                     it.either(::handleFailure,::updateNoteIdLiveData)
                 }
                // изменение активных записей пока напишу здесь возможно прийдеться перенести
-                profileUseCases.changeRunningEntries(CounterEntriesParams(profileId))
+//                profileUseCases.changeRunningEntries(CounterEntriesParams(profileId))
             })
         }
 

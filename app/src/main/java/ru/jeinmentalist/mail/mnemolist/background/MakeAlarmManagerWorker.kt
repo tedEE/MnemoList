@@ -8,10 +8,7 @@ import dagger.assisted.AssistedInject
 import ru.jeinmentalist.mail.domain.note.Note
 import ru.jeinmentalist.mail.domain.note.noteUseCase.GetNoteByIdUseCase
 import ru.jeinmentalist.mail.domain.note.noteUseCase.UpdateNoteNextTimestampUseCase
-
 import ru.jeinmentalist.mail.domain.note.noteUseCase.UpdateNoteStateUseCase
-import ru.jeinmentalist.mail.domain.profile.profileUseCase.ChangeCompletedEntriesUseCase
-import ru.jeinmentalist.mail.domain.profile.profileUseCase.CounterEntriesParams
 import ru.jeinmentalist.mail.domain.timestamp.timstampUseCase.LoadTimestampListUseCase
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.sendLastNotification
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
@@ -29,8 +26,8 @@ class MakeAlarmManagerWorker @AssistedInject constructor(
     val mGetNoteById: GetNoteByIdUseCase,
     val mUpdateNote: UpdateNoteNextTimestampUseCase,
     val mUpdateNoteState: UpdateNoteStateUseCase,
-    val mLoadTimestampList: LoadTimestampListUseCase,
-    val mChangeCompletedEntries: ChangeCompletedEntriesUseCase
+    val mLoadTimestampList: LoadTimestampListUseCase
+//    val mChangeCompletedEntries: ChangeCompletedEntriesUseCase
 ) : BaseWorker(context, workerParameters) {
 
     private var lch: Int = 0
@@ -109,7 +106,7 @@ class MakeAlarmManagerWorker @AssistedInject constructor(
     }
 
     private fun changeCompletedEntries(note: Note) {
-        mChangeCompletedEntries(CounterEntriesParams(note.profId))
+//        mChangeCompletedEntries(CounterEntriesParams(note.profId))
     }
 
     private fun notificationHandler(note: Note, timestampList: List<Long>) {

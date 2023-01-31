@@ -21,6 +21,7 @@ import ru.jeinmentalist.mail.domain.profile.Profile
 import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mentalist.databinding.FragmentProfileListBinding
 import ru.jeinmentalist.mail.mnemolist.MainActivity
+import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
 import ru.jeinmentalist.mail.mnemolist.base.BaseFragment
 import ru.jeinmentalist.mail.mnemolist.contract.*
 import ru.jeinmentalist.mail.mnemolist.screens.FabMenuFragment
@@ -52,9 +53,11 @@ class ProfileListFragment :
         onBackPressed()
 //        dischargeFab()
         mProfileListViewModel.profileListLiveData.observe(viewLifecycleOwner, Observer {
+            showLog(it.toString())
             mProfileList = it
             profileListAdapter.submitList(it)
         })
+
 
 //        binding.fabMenuItem1.setOnClickListener {
 //            isFabMenuOpen = false

@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.jeinmentalist.mail.data.db.dao.ProfileDao
 import ru.jeinmentalist.mail.data.db.model.ProfileEntity
+import ru.jeinmentalist.mail.data.db.model.ProfileWithTimestamps
 import ru.jeinmentalist.mail.data.db.model.map
 import ru.jeinmentalist.mail.domain.profile.IProfileRepository
 import ru.jeinmentalist.mail.domain.profile.Profile
@@ -40,14 +41,24 @@ class ProfileRepositoryImpl (private val dao: ProfileDao) :
 
     override fun getListFlow(): Either<Failure, Flow<List<Profile>>> {
         val flow = dao.loadProfileListFlow()
-            .map { listProfile: List<ProfileEntity> ->
-                listProfile.map{ profileEntity: ProfileEntity ->
-//                    profileEntity.map()
-                    mapProfileEntityToProfile(profileEntity)
+            .map { listProfileWithTimestamps: List<ProfileWithTimestamps> ->
+                listProfileWithTimestamps.map{ pwt: ProfileWithTimestamps ->
+                    mapProfileEntityToProfile(pwt.profile, pwt.timestamps)
                 }
             }
         return Either.Right(flow)
     }
+
+//    override fun getListFlow(): Either<Failure, Flow<List<Profile>>> {
+//        val flow = dao.loadProfileListFlow()
+//            .map { listProfile: List<ProfileEntity> ->
+//                listProfile.map{ profileEntity: ProfileEntity ->
+////                    profileEntity.map()
+//                    mapProfileEntityToProfile(profileEntity)
+//                }
+//            }
+//        return Either.Right(flow)
+//    }
 
     override fun update(profile: Profile): Either<Failure, None> {
         dao.updateProfile(mapProfileToProfileEntity(profile))

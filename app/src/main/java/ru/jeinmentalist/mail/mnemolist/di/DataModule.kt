@@ -18,8 +18,6 @@ import ru.jeinmentalist.mail.data.timestamp.TimestampRepositoryImpl
 import ru.jeinmentalist.mail.domain.note.INoteRepository
 import ru.jeinmentalist.mail.domain.note.noteUseCase.*
 import ru.jeinmentalist.mail.domain.profile.IProfileRepository
-import ru.jeinmentalist.mail.domain.profile.profileUseCase.ChangeCompletedEntriesUseCase
-import ru.jeinmentalist.mail.domain.profile.profileUseCase.ChangeRunningEntriesUseCase
 import ru.jeinmentalist.mail.domain.profile.profileUseCase.GetProfileByIdUseCase
 import ru.jeinmentalist.mail.domain.timestamp.ITimestampRepository
 import ru.jeinmentalist.mail.domain.timestamp.timstampUseCase.LoadTimestampListUseCase
@@ -57,11 +55,6 @@ class DataModule {
     @Provides
     fun provideCheckNoteForExistenceUseCase(repository: INoteRepository): CheckNoteForExistenceUseCase{
         return CheckNoteForExistenceUseCase(repository)
-    }
-
-    @Provides
-    fun provideChangeCompletedEntries(repository: IProfileRepository): ChangeCompletedEntriesUseCase{
-        return ChangeCompletedEntriesUseCase(repository)
     }
 
     @Provides

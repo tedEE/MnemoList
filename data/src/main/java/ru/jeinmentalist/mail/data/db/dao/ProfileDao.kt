@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import ru.jeinmentalist.mail.data.db.model.ProfileEntity
+import ru.jeinmentalist.mail.data.db.model.ProfileWithTimestamps
 
 @Dao
 interface ProfileDao {
@@ -18,7 +19,10 @@ interface ProfileDao {
     fun loadProfileList(): List<ProfileEntity>
 
     @Query("SELECT * FROM ${ProfileEntity.TABLE_NAME_PROFILE}")
-    fun loadProfileListFlow(): Flow<List<ProfileEntity>>
+    fun loadProfileListFlow(): Flow<List<ProfileWithTimestamps>>
+
+//    @Query("SELECT * FROM ${ProfileEntity.TABLE_NAME_PROFILE}")
+//    fun loadProfileListFlow(): Flow<List<ProfileEntity>>
 
     @Query("SELECT * FROM ${ProfileEntity.TABLE_NAME_PROFILE} WHERE profile_id = :id")
     fun getProfileById(id: String): ProfileEntity

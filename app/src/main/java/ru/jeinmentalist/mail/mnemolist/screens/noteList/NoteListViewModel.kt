@@ -13,9 +13,6 @@ import ru.jeinmentalist.mail.domain.note.Note
 import ru.jeinmentalist.mail.domain.note.noteUseCase.DeleteNoteUseCase
 import ru.jeinmentalist.mail.domain.note.noteUseCase.GetNotesFlowUseCase
 import ru.jeinmentalist.mail.domain.note.noteUseCase.NoteUseCases
-import ru.jeinmentalist.mail.domain.profile.profileUseCase.CounterEntriesParams
-import ru.jeinmentalist.mail.domain.profile.profileUseCase.DecrementCounterCompletedEntries
-import ru.jeinmentalist.mail.domain.profile.profileUseCase.DecrementCounterRunningEntries
 import ru.jeinmentalist.mail.domain.type.ITransmitted
 import ru.jeinmentalist.mail.mnemolist.base.BaseViewModel
 import ru.jeinmentalist.mail.mnemolist.utils.convertTransmittedFromNote
@@ -24,8 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class NoteListViewModel @Inject constructor(
     val useCase: NoteUseCases,
-    val decrementCompleteEntries: DecrementCounterCompletedEntries,
-    val decrementRunngEntries: DecrementCounterRunningEntries,
+//    val decrementCompleteEntries: DecrementCounterCompletedEntries,
+//    val decrementRunngEntries: DecrementCounterRunningEntries,
     application: Application
 ) : BaseViewModel(application) {
 
@@ -44,9 +41,9 @@ class NoteListViewModel @Inject constructor(
         useCase.deleteNote(DeleteNoteUseCase.Params(note)){
             it.either(::handleFailure){
                 if (note.state == Note.Done().state){
-                    decrementCompleteEntries(CounterEntriesParams(note.profId))
+//                    decrementCompleteEntries(CounterEntriesParams(note.profId))
                 }else if (note.state == Note.Running().state){
-                    decrementRunngEntries(CounterEntriesParams(note.profId))
+//                    decrementRunngEntries(CounterEntriesParams(note.profId))
                 }
 
             }
