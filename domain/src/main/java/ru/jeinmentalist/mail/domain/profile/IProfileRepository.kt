@@ -11,8 +11,9 @@ interface IProfileRepository {
     fun remove(id: String): Either<Failure, None>
     fun getList(): Either<Failure, List<Profile>>
     fun getListFlow(): Either<Failure, Flow<List<Profile>>>
-    fun changeCompletedEntries(profileId: String): Either<Failure, None>
-    fun deleteCompletedEntries(profileId: String): Either<Failure, None>
-    fun changeRunningEntries(profileId: String): Either<Failure, None>
-    fun deleteRunningEntries(profileId: String): Either<Failure, None>
+    fun update(profile: Profile): Either<Failure, None>
+//    fun changeCompletedEntries(profileId: String): Either<Failure, None>
+//    fun deleteCompletedEntries(profileId: String): Either<Failure, None>
+//    fun changeRunningEntries(profileId: String): Either<Failure, None>
+//    fun deleteRunningEntries(profileId: String): Either<Failure, None>
 }

@@ -39,7 +39,7 @@ class DomainModule {
             GetProfileListFlowUseCase(repository),
             GetProfileListUseCase(repository),
             RemoveProfileUseCase(repository),
-            ChangeRunningEntriesUseCase(repository)
+            UpdateProfileUseCase(repository)
         )
     }
 
@@ -52,13 +52,13 @@ class DomainModule {
         )
     }
 
-    @Provides
-    fun provideDecrementCounterCompletedEntries(repository: IProfileRepository): DecrementCounterCompletedEntries {
-        return DecrementCounterCompletedEntries(repository)
-    }
-
-    @Provides
-    fun provideDecrementCounterRunningEntries(repository: IProfileRepository): DecrementCounterRunningEntries {
-        return DecrementCounterRunningEntries(repository)
-    }
+//    @Provides
+//    fun provideDecrementCounterCompletedEntries(repository: IProfileRepository): DecrementCounterCompletedEntries {
+//        return DecrementCounterCompletedEntries(repository)
+//    }
+//
+//    @Provides
+//    fun provideDecrementCounterRunningEntries(repository: IProfileRepository): DecrementCounterRunningEntries {
+//        return DecrementCounterRunningEntries(repository)
+//    }
 }

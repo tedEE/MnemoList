@@ -59,8 +59,12 @@ class RemindManagerOnWorkManager(
 
     }
 
-    override fun canncelReminde(noteId: Int) {
-        updateNoteState(UpdateNoteStateUseCase.Param(noteId, Note.Canceled().state))
+    override fun cancelReminder(noteId: Int, callback: ()->Unit) {
+        updateNoteState(UpdateNoteStateUseCase.Param(noteId, Note.Canceled().state)){
+            it.either({}, {
+                callback.invoke()
+            })
+        }
     }
 
     private fun checkTime(note: Note): Boolean {

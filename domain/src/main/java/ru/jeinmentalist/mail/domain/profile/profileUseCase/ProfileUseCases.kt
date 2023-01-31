@@ -6,5 +6,5 @@ data class ProfileUseCases(
     val getProfileListFlow: GetProfileListFlowUseCase,
     val getProfileList: GetProfileListUseCase,
     val removeProfile: RemoveProfileUseCase,
-    val changeRunningEntries: ChangeRunningEntriesUseCase
+    val updateProfile: UpdateProfileUseCase
 )

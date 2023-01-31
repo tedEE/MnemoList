@@ -17,18 +17,21 @@ data class ProfileEntity(
     @ColumnInfo(name = "completed_entries") // выполненые записи
     val completedEntries: Int,
     @ColumnInfo(name = "running_entries")// выполняемые записи
-    val running_entries: Int,
+    val runningEntries: Int,
+    @ColumnInfo(name = "canceled_entries")// отмененые записи
+    val canceledEntries: Int
 ){
     companion object{
         const val TABLE_NAME_PROFILE = "profile_table"
     }
 }
 
-fun ProfileEntity.map() =
-    Profile(
-        profileId = profileId,
-        profileName = profileName,
-        profileType = profileType,
-        runningEntries = running_entries,
-        completedEntries = completedEntries
-    )
+//fun ProfileEntity.map() =
+//    Profile(
+//        profileId = profileId,
+//        profileName = profileName,
+//        profileType = profileType,
+//        runningEntries = runningEntries,
+//        completedEntries = completedEntries,
+//        canceledEntries = canceledEntries
+//    )

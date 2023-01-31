@@ -16,7 +16,7 @@ interface IReminderManager {
         noteId: Int,
     )
 
-    fun canncelReminde(noteId: Int)
+    fun cancelReminder(noteId: Int, callback: ()->Unit)
 
     fun stopReminder(
         context: Context,

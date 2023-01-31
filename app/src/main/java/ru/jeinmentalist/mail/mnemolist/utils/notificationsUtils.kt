@@ -80,14 +80,14 @@ fun sendNotification(
             )
         }
 
-    val contentIntent = Intent(applicationContext, MainActivity::class.java).let { intent ->
-        PendingIntent.getActivity(
-            applicationContext,
-            NOTIFICATION_ID,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-    }
+//    val contentIntent = Intent(applicationContext, MainActivity::class.java).let { intent ->
+//        PendingIntent.getActivity(
+//            applicationContext,
+//            NOTIFICATION_ID,
+//            intent,
+//            PendingIntent.FLAG_UPDATE_CURRENT
+//        )
+//    }
 
     val builder = NotificationCompat.Builder(
         applicationContext,
@@ -100,7 +100,7 @@ fun sendNotification(
 //        .setTicker("Всплывающий текст")
         .setWhen(System.currentTimeMillis())
         .setContentText(messageBody)
-        .setContentIntent(contentIntent)
+//        .setContentIntent(contentIntent)
         .addAction(R.drawable.ic_remember, "Продолжить", proceedIntent)
         .addAction(R.drawable.ic_remember__1_, "Сбросить", stopIntent)
         //уведомление закрывается, когда оно переводит их в приложение.
@@ -254,7 +254,7 @@ fun sendLastNotification(applicationContext: Context) {
     nm.notify(System.currentTimeMillis().toInt(), builder.build())
 }
 
-fun createRebootNotification( applicationContext: Context, title: String){
+fun createRebootNotification( applicationContext: Context, title: String, content: String = "запуск после перезагрузки"){
     val remember =
         BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_remember)
     val builder = NotificationCompat.Builder(
@@ -265,7 +265,7 @@ fun createRebootNotification( applicationContext: Context, title: String){
         .setLargeIcon(remember)
         .setContentTitle(title)
         .setWhen(System.currentTimeMillis())
-        .setContentText("запуск после перезагрузки")
+        .setContentText(content)
         .setContentInfo("setContentInfo")
         .setPriority(NotificationCompat.PRIORITY_MAX)
 

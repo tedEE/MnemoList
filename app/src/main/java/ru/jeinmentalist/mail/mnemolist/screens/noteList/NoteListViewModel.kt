@@ -43,9 +43,9 @@ class NoteListViewModel @Inject constructor(
     fun deleteNote(note: Note){
         useCase.deleteNote(DeleteNoteUseCase.Params(note)){
             it.either(::handleFailure){
-                if (note.state == Note.DONE){
+                if (note.state == Note.Done().state){
                     decrementCompleteEntries(CounterEntriesParams(note.profId))
-                }else if (note.state == Note.RUNNING){
+                }else if (note.state == Note.Running().state){
                     decrementRunngEntries(CounterEntriesParams(note.profId))
                 }
 
