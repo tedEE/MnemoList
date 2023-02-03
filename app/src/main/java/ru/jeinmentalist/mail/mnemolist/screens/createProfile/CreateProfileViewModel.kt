@@ -3,11 +3,9 @@ package ru.jeinmentalist.mail.mnemolist.screens.createProfile
 import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.jeinmentalist.mail.domain.profile.profileUseCase.AddProfileUseCase
-import ru.jeinmentalist.mail.domain.profile.profileUseCase.ProfileUseCases
 import ru.jeinmentalist.mail.domain.timestamp.Timestamp
 import ru.jeinmentalist.mail.domain.timestamp.timstampUseCase.AddTimestampsListUseCase
 import ru.jeinmentalist.mail.domain.timestamp.timstampUseCase.TimestampsUseCases
-import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mnemolist.base.BaseViewModel
 import ru.jeinmentalist.mail.mnemolist.utils.convertKeyMap
 import ru.jeinmentalist.mail.mnemolist.utils.timeInterval
@@ -15,15 +13,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateProfileViewModel@Inject constructor(
-    val profileUseCases: ProfileUseCases,
-    val timestampUseCases: TimestampsUseCases,
+//    private val profileUseCases: ProfileUseCases,
+    private val addProfileUseCase: AddProfileUseCase,
+    private val timestampUseCases: TimestampsUseCases,
     application: Application
 ) : BaseViewModel(application) {
 
 
     fun createProfile(profileName: String, profileId: String,  list: List<Timestamp>){
         // как то надо реализовать установку типа профиля
-        profileUseCases.addProfile(AddProfileUseCase.Params(profileName, profileId=profileId, profileType = 0)){
+        addProfileUseCase(AddProfileUseCase.Params(profileName, profileId=profileId, profileType = 0)){
             it.either(::handleFailure
             ) { addListTimestamp(list) }// надо подумать как передать эту функцию в виде сслыки
         }

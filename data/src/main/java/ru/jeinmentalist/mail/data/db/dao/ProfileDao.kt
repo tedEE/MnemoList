@@ -1,10 +1,6 @@
 package ru.jeinmentalist.mail.data.db.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import ru.jeinmentalist.mail.data.db.model.ProfileEntity
 import ru.jeinmentalist.mail.data.db.model.ProfileWithTimestamps
@@ -18,21 +14,19 @@ interface ProfileDao {
     @Query("SELECT * FROM ${ProfileEntity.TABLE_NAME_PROFILE}")
     fun loadProfileList(): List<ProfileEntity>
 
+    @Transaction
     @Query("SELECT * FROM ${ProfileEntity.TABLE_NAME_PROFILE}")
     fun loadProfileListFlow(): Flow<List<ProfileWithTimestamps>>
 
-//    @Query("SELECT * FROM ${ProfileEntity.TABLE_NAME_PROFILE}")
-//    fun loadProfileListFlow(): Flow<List<ProfileEntity>>
-
+    @Transaction
     @Query("SELECT * FROM ${ProfileEntity.TABLE_NAME_PROFILE} WHERE profile_id = :id")
-    fun getProfileById(id: String): ProfileEntity
+    fun getProfileById(id: String): ProfileWithTimestamps
 
     @Query("DELETE FROM ${ProfileEntity.TABLE_NAME_PROFILE} WHERE profile_id = :id")
     fun deleteProfile(id: String)
 
     @Update(entity = ProfileEntity::class)
     fun updateProfile(profile: ProfileEntity)
-
 
 //    @Query("UPDATE ${ProfileEntity.TABLE_NAME_PROFILE}" +
 //            " SET completed_entries = completed_entries + 1, running_entries = running_entries - 1 WHERE profile_id = :profileId")

@@ -64,7 +64,7 @@
                 tools:text="5" />
 
             <TextView
-                android:id="@+id/separator"
+                android:id="@+id/separator1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/profile_item_separator" />
@@ -74,6 +74,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
+                tools:text="8" />
+            <TextView
+                android:id="@+id/separator2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_item_separator" />
+
+            <TextView
+                android:id="@+id/canceled_entries"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/deep_taupe"
                 tools:text="8" />
         </LinearLayout>
 

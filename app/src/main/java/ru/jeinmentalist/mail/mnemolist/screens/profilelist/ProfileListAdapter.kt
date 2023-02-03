@@ -58,6 +58,7 @@ class ProfileListAdapter : ListAdapter<Profile, ProfileListAdapter.ProfileViewHo
         private val profileName = view.findViewById<TextView>(R.id.nameProfile)
         private val runningEntries = view.findViewById<TextView>(R.id.running_entries)
         private val completedEntries = view.findViewById<TextView>(R.id.completed_entries)
+        private val canceledEntries = view.findViewById<TextView>(R.id.canceled_entries)
 //        private val desc = view.findViewById<ConstraintLayout>(R.id.profile_description)
         private val profile_item = view.findViewById<ConstraintLayout>(R.id.profile_item)
         val buttonDelete = view.findViewById<Button>(R.id.button_delete)
@@ -66,6 +67,7 @@ class ProfileListAdapter : ListAdapter<Profile, ProfileListAdapter.ProfileViewHo
             profileName.text = item.profileName
             runningEntries.text = item.runningEntries.toString()
             completedEntries.text = item.completedEntries.toString()
+            canceledEntries.text = item.canceledEntries.toString()
             // необходимо для анимации открытия cardview
 //            profile_item.layoutTransition.enableTransitionType(LayoutTransition.APPEARING)
         }

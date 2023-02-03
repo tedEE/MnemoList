@@ -30,18 +30,17 @@ class DomainModule {
             GetNotesFlowUseCase(repository)
         )
     }
-
-    @Provides
-    fun provideProfileUseCases(repository: IProfileRepository): ProfileUseCases {
-        return ProfileUseCases(
-            AddProfileUseCase(repository),
-            GetProfileByIdUseCase(repository),
-            GetProfileListFlowUseCase(repository),
-            GetProfileListUseCase(repository),
-            RemoveProfileUseCase(repository),
-            UpdateProfileUseCase(repository)
-        )
-    }
+//    @Provides
+//    fun provideProfileUseCases(repository: IProfileRepository): ProfileUseCases {
+//        return ProfileUseCases(
+//            AddProfileUseCase(repository),
+//            GetProfileByIdUseCase(repository),
+//            GetProfileListFlowUseCase(repository),
+//            GetProfileListUseCase(repository),
+//            RemoveProfileUseCase(repository),
+//            UpdateProfileUseCase(repository)
+//        )
+//    }
 
     @Provides
     fun provideTimestampsUseCases(repository: ITimestampRepository): TimestampsUseCases {

@@ -11,4 +11,19 @@ data class Profile(
     val runningEntries: Int,
     val canceledEntries: Int,
     val timestampList: List<Timestamp> = listOf()
-): ITransmitted
+): ITransmitted{
+
+//    fun addRunningEntries(){
+//        runningEntries ++
+//    }
+//
+//    fun addCanceledEntries(){
+//        runningEntries --
+//        canceledEntries ++
+//    }
+//
+//    fun addCompletedEntries(){
+//        runningEntries --
+//        completedEntries ++
+//    }
+}

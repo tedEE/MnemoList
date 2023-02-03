@@ -15,16 +15,18 @@ import ru.jeinmentalist.mail.domain.note.noteUseCase.GetNotesFlowUseCase
 import ru.jeinmentalist.mail.domain.note.noteUseCase.NoteUseCases
 import ru.jeinmentalist.mail.domain.type.ITransmitted
 import ru.jeinmentalist.mail.mnemolist.base.BaseViewModel
+import ru.jeinmentalist.mail.mnemolist.screens.delegat.IGetProfile
 import ru.jeinmentalist.mail.mnemolist.utils.convertTransmittedFromNote
 import javax.inject.Inject
 
 @HiltViewModel
 class NoteListViewModel @Inject constructor(
     val useCase: NoteUseCases,
-//    val decrementCompleteEntries: DecrementCounterCompletedEntries,
-//    val decrementRunngEntries: DecrementCounterRunningEntries,
+//    val getProfileUC: GetProfileByIdUseCase,
+//    val updateProfile: UpdateProfileUseCase,
+    delegate: IGetProfile,
     application: Application
-) : BaseViewModel(application) {
+) : BaseViewModel(application), IGetProfile by delegate{
 
     private val _noteListLiveData = MutableLiveData<List<Note>>()
     val notListLiveData: LiveData<List<Note>>
@@ -40,11 +42,15 @@ class NoteListViewModel @Inject constructor(
     fun deleteNote(note: Note){
         useCase.deleteNote(DeleteNoteUseCase.Params(note)){
             it.either(::handleFailure){
-                if (note.state == Note.Done().state){
-//                    decrementCompleteEntries(CounterEntriesParams(note.profId))
-                }else if (note.state == Note.Running().state){
-//                    decrementRunngEntries(CounterEntriesParams(note.profId))
-                }
+//                changeProfile(note)
+
+//                if (note.state == Note.Done().state){
+//                    getProfile(note.profId){
+//
+//                    }
+//                }else if (note.state == Note.Running().state){
+////                    decrementRunngEntries(CounterEntriesParams(note.profId))
+//                }
 
             }
         }
@@ -55,6 +61,41 @@ class NoteListViewModel @Inject constructor(
             liveDataFromFlow(flow)
         }
     }
+
+    private fun changeProfile(note: Note){
+        when(note.state){
+            Note.Done().state -> {
+                getProfile(note.profId){
+//                    it.completedEntries --
+//                    saveProfile(it)
+                }
+            }
+            Note.Running().state -> {
+                getProfile(note.profId){
+//                    it.runningEntries --
+//                    saveProfile(it)
+                }
+            }
+            Note.Canceled().state -> {
+                getProfile(note.profId){
+//                    it.canceledEntries --
+//                    saveProfile(it)
+                }
+            }
+        }
+    }
+
+//    private fun getProfile(profileId: String, callback: (Profile)->Unit){
+//        getProfileUC(GetProfileByIdUseCase.Params(profileId)){
+//            it.either({}){
+//                callback.invoke(it)
+//            }
+//        }
+//    }
+//
+//    private fun saveProfile(pr: Profile){
+//        updateProfile(UpdateProfileUseCase.Params(pr))
+//    }
 
     private suspend fun liveDataFromFlow(flow: Flow<List<ITransmitted>>) {
         flow

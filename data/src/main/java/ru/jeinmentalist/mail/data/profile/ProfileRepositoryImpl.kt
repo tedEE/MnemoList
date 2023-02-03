@@ -22,9 +22,9 @@ class ProfileRepositoryImpl (private val dao: ProfileDao) :
     }
 
     override fun getById(id: String): Either<Failure,Profile> {
-        val profile = dao.getProfileById(id)
+        val profile: ProfileWithTimestamps = dao.getProfileById(id)
 //        return Either.Right(profile.map())
-        return Either.Right(mapProfileEntityToProfile(profile))
+        return Either.Right(mapProfileEntityToProfile(profile.profile, profile.timestamps))
     }
 
     override fun remove(id: String): Either<Failure, None> {

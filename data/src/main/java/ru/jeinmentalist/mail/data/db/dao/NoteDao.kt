@@ -27,8 +27,6 @@ interface NoteDao {
     @Delete(entity = NoteEntity::class)
     fun deleteNote(entity: NoteEntity)
 
-//    @Query("SELECT * FROM ${NoteEntity.TABLE_NAME_NOTE} WHERE note_id = :id" )
-//    fun getNoteById(id: Int): NoteEntity
     @Query("SELECT * FROM ${NoteEntity.TABLE_NAME_NOTE} AS n JOIN ${TimestampEntity.TABLE_NAME_TIMESTAMP} AS t ON n.prof_id = t.profile_id WHERE n.note_id = :id" )
     fun getNoteAndTimestampList(id: Int): Map<NoteEntity, List<TimestampEntity>>
 

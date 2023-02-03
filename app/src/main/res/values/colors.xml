@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="background_menu_from">#00FFFFFF</color>
     <color name="background_menu_to">#80FFFFFF</color>
+    <color name="deep_taupe">#8B8589</color>
 </resources>
