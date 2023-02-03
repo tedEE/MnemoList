@@ -69,9 +69,14 @@ class NoteListFragment : BaseFragment<FragmentNoteListBinding>(FragmentNoteListB
                 showDescriptionDialogFragment(it)
                 val workInfo = WorkManager
                     .getInstance(requireContext())
-                    .getWorkInfosByTag(it.noteId.toString())
-                showToast(requireContext(), "статус воркера ${workInfo.get().last().state}")
-                showLog("статус воркера ${workInfo.get().last().state}")
+                    .getWorkInfosByTag(it.noteId.toString() + it.nextRunningTimestamp.toString())
+                if (workInfo.get().isEmpty()){
+                    showToast(requireContext(), "Давно завершенный воркер")
+                }else{
+                    val status = workInfo.get()[0].state.toString()
+                    showToast(requireContext(), "статус воркера $status")
+                    showLog("статус воркера $status")
+                }
             }
         }
     }

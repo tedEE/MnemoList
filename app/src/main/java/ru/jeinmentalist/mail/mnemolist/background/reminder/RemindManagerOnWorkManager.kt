@@ -22,7 +22,7 @@ class RemindManagerOnWorkManager(
     override fun startReminder(context: Context, noteId: Int, timeReminder: Long, reminderId: Int) {
         getNote(GetNoteByIdUseCase.Params(noteId)){
             it.either({}){ note: Note ->
-                ReminderWorker.create(context, note.nextRunningTimestamp, note.noteId)
+                ReminderWorker.create(context, note.nextRunningTimestamp, note.noteId, note.noteId.toString() + note.nextRunningTimestamp.toString())
             }
         }
     }
@@ -42,7 +42,7 @@ class RemindManagerOnWorkManager(
                     it.either({},{
                         if (checkTime(note) && note.checkRunningNote()){
                             showLog("Уже поздно")
-                            ReminderWorker.create(context, 1000, note.noteId)
+                            ReminderWorker.create(context, 1000, note.noteId, note.noteId.toString() + note.nextRunningTimestamp.toString())
                         }else{
                             if (note.checkDoneNote()) {
                                 sendLastNotification(context)
@@ -50,7 +50,7 @@ class RemindManagerOnWorkManager(
                                 showToast(context, "Заметка обновленна")
                                 showLog("состояние ${note.state}")
                                 val executableTimestamp = note.timeOfCreation.toLong() + note.nextRunningTimestamp - System.currentTimeMillis()
-                                ReminderWorker.create(context, executableTimestamp, note.noteId)
+                                ReminderWorker.create(context, executableTimestamp, note.noteId, note.noteId.toString() + note.nextRunningTimestamp.toString())
                             }
                         }
                     })

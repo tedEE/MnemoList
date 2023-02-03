@@ -50,12 +50,12 @@ class ReminderWorker @AssistedInject constructor(
         const val WORK_NAME = "ReminderWorker"
         const val NOTE_TIMESTAMP = "note_timestamp"
 
-        fun create(context: Context, executableTimestamp: Long, id: Int) {
+        fun create(context: Context, executableTimestamp: Long, id: Int, tag: String) {
             val workManager = WorkManager.getInstance(context)
             workManager.enqueueUniqueWork(
                 WORK_NAME,
                 ExistingWorkPolicy.APPEND_OR_REPLACE,
-                makeRequest(id, executableTimestamp)
+                makeRequest(id, executableTimestamp, tag)
             )
         }
 
@@ -63,9 +63,9 @@ class ReminderWorker @AssistedInject constructor(
             WorkManager.getInstance(context).cancelAllWorkByTag(tag)
         }
 
-        private fun makeRequest(id: Int, timestamp: Long): OneTimeWorkRequest {
+        private fun makeRequest(id: Int, timestamp: Long, tag: String): OneTimeWorkRequest {
             return OneTimeWorkRequestBuilder<ReminderWorker>()
-                .addTag(id.toString())
+                .addTag(tag)
                 .setInputData(workDataOf(ID to id, NOTE_TIMESTAMP to timestamp))
                 .setInitialDelay(Duration.ofMillis(timestamp))
                 .build()
