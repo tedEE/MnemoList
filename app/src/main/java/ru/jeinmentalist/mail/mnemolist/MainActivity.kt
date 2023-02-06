@@ -17,6 +17,7 @@ import androidx.lifecycle.LifecycleOwner
 import dagger.hilt.android.AndroidEntryPoint
 import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mentalist.databinding.ActivityMainBinding
+import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
 import ru.jeinmentalist.mail.mnemolist.contract.*
 import ru.jeinmentalist.mail.mnemolist.screens.createNote.CreateNoteFragment
 import ru.jeinmentalist.mail.mnemolist.screens.createProfile.CreateProfileFragment

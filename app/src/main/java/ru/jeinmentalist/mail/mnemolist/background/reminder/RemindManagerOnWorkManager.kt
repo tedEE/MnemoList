@@ -36,7 +36,7 @@ class RemindManagerOnWorkManager(
                     note.changeState(Note.Done())
                     showLog("состояние ${note.state}")
                 }
-                note.changeСurrentExecutableTimestamp()
+//                note.changeСurrentExecutableTimestamp()
                 note.changeNextExecutableTimestamp()
                 updateNote(UpdateNoteNextTimestampUseCase.Params(note.noteId, note.nextRunningTimestamp, note.state)){
                     it.either({},{

@@ -33,7 +33,8 @@ abstract class MnemoListDatabase : RoomDatabase() {
                         ON notes_table
                         BEGIN
                             UPDATE profile_table
-	                        SET running_entries = running_entries + 1 WHERE profile_id = NEW.prof_id;
+	                        SET running_entries = running_entries + 1
+                            WHERE profile_id = NEW.prof_id;
                         END;
                 """.trimIndent()
                 )
@@ -64,6 +65,45 @@ abstract class MnemoListDatabase : RoomDatabase() {
 	                        SET canceled_entries = canceled_entries + 1,
 		                        running_entries = running_entries - 1
 	                        WHERE profile_id = NEW.prof_id;
+                        END;
+                """.trimIndent()
+                )
+
+                db.execSQL(
+                    """
+                    CREATE TRIGGER delete_running_entries_trigger AFTER DELETE
+                        ON notes_table
+                        WHEN OLD.state = 1
+                        BEGIN
+                            UPDATE profile_table
+	                        SET running_entries = running_entries - 1
+	                        WHERE profile_id = OLD.prof_id;
+                        END;
+                """.trimIndent()
+                )
+
+                db.execSQL(
+                    """
+                    CREATE TRIGGER delete_completed_entries_trigger AFTER DELETE
+                        ON notes_table
+                        WHEN OLD.state = 0
+                        BEGIN
+                            UPDATE profile_table
+	                        SET completed_entries = completed_entries - 1
+	                        WHERE profile_id = OLD.prof_id;
+                        END;
+                """.trimIndent()
+                )
+
+                db.execSQL(
+                    """
+                    CREATE TRIGGER delete_cancel_entries_trigger AFTER DELETE
+                        ON notes_table
+                        WHEN OLD.state = 2
+                        BEGIN
+                            UPDATE profile_table
+	                        SET canceled_entries = canceled_entries - 1
+	                        WHERE profile_id = OLD.prof_id;
                         END;
                 """.trimIndent()
                 )

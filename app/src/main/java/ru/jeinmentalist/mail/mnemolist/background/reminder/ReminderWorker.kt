@@ -1,5 +1,6 @@
 package ru.jeinmentalist.mail.mnemolist.background.reminder
 
+import android.R
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -11,7 +12,11 @@ import dagger.assisted.AssistedInject
 import ru.jeinmentalist.mail.domain.note.Note
 import ru.jeinmentalist.mail.domain.note.noteUseCase.GetNoteByIdUseCase
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.sendNotification
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 import java.time.Duration
+
 
 @HiltWorker
 class ReminderWorker @AssistedInject constructor(
@@ -37,7 +42,15 @@ class ReminderWorker @AssistedInject constructor(
     }
 
     fun getImage(note: Note): Bitmap {
-        val inputStream = applicationContext.contentResolver.openInputStream(Uri.parse(note.pathImage))
+        var inputStream: InputStream? =
+        if (note.checkImage()){
+            applicationContext.contentResolver.openInputStream(Uri.parse(note.pathImage))
+        }else{
+            val bitmap = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_delete)
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+            ByteArrayInputStream(baos.toByteArray())
+        }
         return BitmapFactory.decodeStream(inputStream)
     }
 

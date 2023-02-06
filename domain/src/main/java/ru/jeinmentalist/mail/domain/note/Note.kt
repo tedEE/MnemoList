@@ -38,7 +38,8 @@ data class Note(
         return state == RUNNING
     }
 
-    fun changeСurrentExecutableTimestamp(){
+    fun checkImage(): Boolean{
+        return pathImage.isNotBlank()
     }
 
     fun changeState(state: State){
