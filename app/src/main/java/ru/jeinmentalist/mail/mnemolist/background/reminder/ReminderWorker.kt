@@ -16,6 +16,8 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.time.Duration
+import android.os.Environment.getExternalStorageDirectory
+import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
 
 
 @HiltWorker
@@ -32,6 +34,11 @@ class ReminderWorker @AssistedInject constructor(
             mGetNoteById(GetNoteByIdUseCase.Params(noteId)) {
                 it.either({}, { note ->
                     val imageBitmap = getImage(note)
+                    /////////////////////////
+//                    val root = applicationContext.getExternalFilesDir(null)
+//                    val root = getExternalStorageDirectory()
+//                    showLog("root $root")
+                    //////////////////////////
                     createNotification(imageBitmap, note)
                 })
             }
@@ -72,7 +79,7 @@ class ReminderWorker @AssistedInject constructor(
             )
         }
 
-        fun cancell(context: Context, tag: String){
+        fun cancel(context: Context, tag: String){
             WorkManager.getInstance(context).cancelAllWorkByTag(tag)
         }
 

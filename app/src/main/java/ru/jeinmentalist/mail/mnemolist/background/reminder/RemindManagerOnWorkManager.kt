@@ -5,9 +5,6 @@ import ru.jeinmentalist.mail.domain.note.Note
 import ru.jeinmentalist.mail.domain.note.noteUseCase.GetNoteByIdUseCase
 import ru.jeinmentalist.mail.domain.note.noteUseCase.UpdateNoteNextTimestampUseCase
 import ru.jeinmentalist.mail.domain.note.noteUseCase.UpdateNoteStateUseCase
-import ru.jeinmentalist.mail.domain.profile.Profile
-import ru.jeinmentalist.mail.domain.profile.profileUseCase.GetProfileByIdUseCase
-import ru.jeinmentalist.mail.domain.profile.profileUseCase.UpdateProfileUseCase
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.sendLastNotification
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showToast
@@ -76,6 +73,6 @@ class RemindManagerOnWorkManager(
     }
 
     override fun stopReminder(context: Context, reminderId: Int) {
-        ReminderWorker.cancell(context, reminderId.toString())
+        ReminderWorker.cancel(context, reminderId.toString())
     }
 }
