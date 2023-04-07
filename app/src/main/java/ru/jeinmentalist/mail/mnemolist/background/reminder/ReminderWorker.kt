@@ -72,11 +72,12 @@ class ReminderWorker @AssistedInject constructor(
 
         fun create(context: Context, executableTimestamp: Long, id: Int, tag: String) {
             val workManager = WorkManager.getInstance(context)
-            workManager.enqueueUniqueWork(
-                WORK_NAME,
-                ExistingWorkPolicy.APPEND_OR_REPLACE,
-                makeRequest(id, executableTimestamp, tag)
-            )
+            workManager.enqueue(makeRequest(id, executableTimestamp, tag))
+//            workManager.enqueueUniqueWork(
+//                WORK_NAME,
+//                ExistingWorkPolicy.APPEND_OR_REPLACE,
+//                makeRequest(id, executableTimestamp, tag)
+//            )
         }
 
         fun cancel(context: Context, tag: String){
