@@ -15,6 +15,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.LifecycleOwner
 import dagger.hilt.android.AndroidEntryPoint
+import np.com.susanthapa.curved_bottom_navigation.CbnMenuItem
+import np.com.susanthapa.curved_bottom_navigation.CurvedBottomNavigationView
 import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mentalist.databinding.ActivityMainBinding
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
@@ -24,21 +26,22 @@ import ru.jeinmentalist.mail.mnemolist.screens.createProfile.CreateProfileFragme
 import ru.jeinmentalist.mail.mnemolist.screens.noteList.NoteListFragment
 import ru.jeinmentalist.mail.mnemolist.contract.Options
 import ru.jeinmentalist.mail.mnemolist.screens.ListAllNote.ListAllNoteFragment
+import ru.jeinmentalist.mail.mnemolist.screens.parentMenuFragment.ParentMenuFragment
 import ru.jeinmentalist.mail.mnemolist.screens.profilelist.ProfileListFragment
 import ru.jeinmentalist.mail.mnemolist.utils.ExitWithAnimation
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), Navigator {
+
     lateinit var binding: ActivityMainBinding
 
-    val currentFragment: Fragment
-        get() = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)!!
     val fragmentListener = object : FragmentManager.FragmentLifecycleCallbacks() {
 
         override fun onFragmentViewDestroyed(fm: FragmentManager, f: Fragment) {
             super.onFragmentViewDestroyed(fm, f)
             updateUI()
         }
+
         override fun onFragmentViewCreated(
             fm: FragmentManager,
             f: Fragment,
@@ -46,30 +49,39 @@ class MainActivity : AppCompatActivity(), Navigator {
             savedInstanceState: Bundle?
         ) {
             super.onFragmentViewCreated(fm, f, v, savedInstanceState)
+            showLog(f.toString())
             updateUI()
         }
     }
+
+    val currentFragment: Fragment
+        get() = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
 //        deleteDataBase()
         setSupportActionBar(binding.toolbar)
+        // регистрация слушателя смены фрагментов
+        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
+
         // регистрация первого фрагмент при первом запуске, в дальнейшем фрагмент нужно будет поменять
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.nav_host_fragment, ProfileListFragment())
+                .replace(R.id.nav_host_fragment, ParentMenuFragment())
                 .commit()
         }
-        // регистрация слушателя смены фрагментов
-        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
+
+        fun CurvedBottomNavigationView.selectItemMenu(){
+            
+        }
     }
 
     override fun onBackPressed() {
         when (currentFragment) {
             is IOnBackPress -> {
-                if (!(currentFragment as IOnBackPress).onBackPressed()){
+                if (!(currentFragment as IOnBackPress).onBackPressed()) {
                     super.onBackPressed()
                 }
             }
@@ -110,9 +122,9 @@ class MainActivity : AppCompatActivity(), Navigator {
 
     private fun updateUI() {
         val fragment = currentFragment
-
         if (fragment is HasCustomTitle) {
-            binding.toolbar.title = getString(fragment.getTitleRes())
+            title = getString(fragment.getTitleRes())
+//            binding.toolbar.title = getString(fragment.getTitleRes())
         } else {
             binding.toolbar.title = getString(R.string.app_name)
         }
@@ -146,6 +158,7 @@ class MainActivity : AppCompatActivity(), Navigator {
             return@setOnMenuItemClickListener true
         }
     }
+
     // добавить private
     fun launchFragment(fragment: Fragment) {
         supportFragmentManager
@@ -163,7 +176,7 @@ class MainActivity : AppCompatActivity(), Navigator {
             .commit()
     }
 
-    private fun addFragment(fragment: Fragment){
+    private fun addFragment(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
             .addToBackStack(null)
@@ -171,7 +184,7 @@ class MainActivity : AppCompatActivity(), Navigator {
             .commit()
     }
 
-    fun deleteDataBase(nameDB: String = "mnemo_list_database"){
+    fun deleteDataBase(nameDB: String = "mnemo_list_database") {
         applicationContext.deleteDatabase(nameDB)
     }
 
@@ -193,14 +206,14 @@ class MainActivity : AppCompatActivity(), Navigator {
         goToFirstFragment()
     }
 
-    override fun showCreateProfileFragment(options: Options) {
-        addFragment(CreateProfileFragment.newInstance(options))
+    override fun showCreateProfileFragment() {
+        launchFragment(CreateProfileFragment.newInstance())
     }
 
-    override fun showCreateNoteFragment(options: Options) {
+    override fun showCreateNoteFragment() {
         // создание заметки и редоктирование можно реализовать в одном фрагменте
         // через разные статические методы newInstance
-        addFragment(CreateNoteFragment.newInstance(options))
+        launchFragment(CreateNoteFragment.newInstance())
     }
 
     override fun showListNoteFragment(options: Options) {

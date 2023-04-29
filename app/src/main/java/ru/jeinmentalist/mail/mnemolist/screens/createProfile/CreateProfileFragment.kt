@@ -12,7 +12,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.jeinmentalist.mail.domain.timestamp.Timestamp
 import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mentalist.databinding.FragmentCreateProfileBinding
-import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showToast
 import ru.jeinmentalist.mail.mnemolist.base.BaseFragment
 import ru.jeinmentalist.mail.mnemolist.contract.*
@@ -23,8 +22,7 @@ import java.util.*
 @AndroidEntryPoint
 class CreateProfileFragment : BaseFragment<FragmentCreateProfileBinding>(
     FragmentCreateProfileBinding::inflate
-), HasCustomAction,
-    ExitWithAnimation{
+), HasCustomAction{
 
     private val createProfileViewModel: CreateProfileViewModel by viewModels()
     private var timestampExecutionTimeText: Long? = null
@@ -32,19 +30,10 @@ class CreateProfileFragment : BaseFragment<FragmentCreateProfileBinding>(
     private val timestampList = mutableListOf<Timestamp>()
     private var idProfile: String = ""
 
-    override var posX: Int? = null
-    override var posY: Int? = null
-
     private var mOptions: Options? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mOptions =
-            savedInstanceState?.getParcelable(KEY_OPTIONS)
-                ?: arguments?.getParcelable(ARG_OPTIONS)
-                        ?: throw IllegalArgumentException("You need to specify options to launch this fragment")
-        posX = mOptions!!.openParams[0]
-        posY = mOptions!!.openParams[1]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,10 +42,6 @@ class CreateProfileFragment : BaseFragment<FragmentCreateProfileBinding>(
             ContextCompat.getColor(requireContext(), R.color.purple_500),
             ContextCompat.getColor(requireContext(), R.color.ic_launcher_background),
             1000
-        )
-        view.startCircularReveal(posX!!,
-            posY!!,
-            animator
         )
 //        createProfileViewModel = ViewModelProvider(this)[CreateProfileViewModel::class.java]
         idProfile = createIdDb()
@@ -196,34 +181,10 @@ class CreateProfileFragment : BaseFragment<FragmentCreateProfileBinding>(
     private fun createIdDb(): String = UUID.randomUUID().toString()
 
 
-    override fun close(callback: () -> Unit) {
-        view?.startBackgroundColorAnimation(
-            ContextCompat.getColor(requireContext(), R.color.ic_launcher_background),
-            ContextCompat.getColor(requireContext(), R.color.purple_500),
-            1000
-        )?.start()
-        view?.exitCircularReveal(
-            posX!!,
-            posY!!,
-            null
-        ) {
-            view?.visibility = View.GONE
-            navigator().deleteFragment(this)
-        }
-    }
-
-    override fun isToBeExitedWithAnimation(): Boolean = true
-
-
     companion object {
-        private val ARG_OPTIONS = "ARG_OPTIONS"
-        private val KEY_OPTIONS = "KEY_OPTIONS"
 
-        fun newInstance(options: Options): CreateProfileFragment {
-            val args = Bundle()
-            args.putParcelable(ARG_OPTIONS, options)
+        fun newInstance(): CreateProfileFragment {
             val fragment = CreateProfileFragment()
-            fragment.arguments = args
             return fragment
         }
     }

@@ -57,6 +57,10 @@ android {
 dependencies {
     implementation project(path: ':domain')
     implementation project(path: ':data')
+
+    //curved-bottom-navigation
+    def curved_bottom_navigation = '0.6.5'
+    implementation "np.com.susanthapa:curved_bottom_navigation:$curved_bottom_navigation"
     //Hilt
 //    implementation 'com.google.dagger:hilt-android:2.41'
 //    implementation 'androidx.legacy:legacy-support-v4:1.0.0'

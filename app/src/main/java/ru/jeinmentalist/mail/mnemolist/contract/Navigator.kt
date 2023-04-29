@@ -17,8 +17,8 @@ interface Navigator {
     fun goToFirstFragment()
     // показ экранов
     fun showListNote()
-    fun showCreateProfileFragment(options: Options)
-    fun showCreateNoteFragment(options: Options)
+    fun showCreateProfileFragment()
+    fun showCreateNoteFragment()
     fun showListNoteFragment(options: Options)
     fun goBack()
     fun deleteFragment(fragment: Fragment)

@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -14,21 +13,17 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
-import ru.jeinmentalist.mail.domain.note.Note
 import ru.jeinmentalist.mail.domain.profile.Profile
 import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mentalist.databinding.FragmentCreateNoteBinding
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
-import ru.jeinmentalist.mail.mnemolist.background.MakeAlarmWorker
 import ru.jeinmentalist.mail.mnemolist.background.reminder.IReminderManager
-import ru.jeinmentalist.mail.mnemolist.background.reminder.RemindManagerOnWorkManager
 import ru.jeinmentalist.mail.mnemolist.base.BaseFragment
 import ru.jeinmentalist.mail.mnemolist.contract.*
 import ru.jeinmentalist.mail.mnemolist.utils.ExitWithAnimation
 import ru.jeinmentalist.mail.mnemolist.utils.exitCircularReveal
 import ru.jeinmentalist.mail.mnemolist.utils.startBackgroundColorAnimation
 import ru.jeinmentalist.mail.mnemolist.utils.startCircularReveal
-import java.io.File
 import javax.inject.Inject
 
 
@@ -36,10 +31,9 @@ import javax.inject.Inject
 class CreateNoteFragment :
     BaseFragment<FragmentCreateNoteBinding>(FragmentCreateNoteBinding::inflate),
     HasCustomTitle,
-    HasCustomAction,
-    ExitWithAnimation {
+    HasCustomAction {
 
-    private lateinit var mOptions: Options
+//    private lateinit var mOptions: Options
     @Inject lateinit var remMan: IReminderManager
     private var mPathImage: String = ""
     private var mProfileList: List<Profile>? = null
@@ -55,16 +49,16 @@ class CreateNoteFragment :
                 .into(binding.imageDescription)
         }
 
-    override var posX: Int? = null
-    override var posY: Int? = null
+//    override var posX: Int? = null
+//    override var posY: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mOptions =
-            savedInstanceState?.getParcelable(KEY_OPTIONS) ?: arguments?.getParcelable(ARG_OPTIONS)
-                    ?: throw IllegalArgumentException("You need to specify options to launch this fragment")
-        posX = mOptions.openParams[0]
-        posY = mOptions.openParams[1]
+//        mOptions =
+//            savedInstanceState?.getParcelable(KEY_OPTIONS) ?: arguments?.getParcelable(ARG_OPTIONS)
+//                    ?: throw IllegalArgumentException("You need to specify options to launch this fragment")
+//        posX = mOptions.openParams[0]
+//        posY = mOptions.openParams[1]
     }
 
 //    fun get_filename_by_uri(uri : Uri) : String{
@@ -108,7 +102,7 @@ class CreateNoteFragment :
             ContextCompat.getColor(requireContext(), R.color.ic_launcher_background),
             1000
         )
-        view.startCircularReveal(posX!!, posY!!, animator)
+//        view.startCircularReveal(posX!!, posY!!, animator)
 
 
         binding.enterLocationNote.setOnFocusChangeListener { _, focused ->
@@ -135,24 +129,23 @@ class CreateNoteFragment :
         }
     }
 
-
-    override fun isToBeExitedWithAnimation(): Boolean = true
-
-    override fun close(callback: () -> Unit) {
-        view?.startBackgroundColorAnimation(
-            ContextCompat.getColor(requireContext(), R.color.ic_launcher_background),
-            ContextCompat.getColor(requireContext(), R.color.purple_500),
-            1000
-        )?.start()
-        view?.exitCircularReveal(
-            posX!!,
-            posY!!,
-            null
-        ) {
-            view?.visibility = View.GONE
-            navigator().deleteFragment(this)
-        }
-    }
+//    override fun isToBeExitedWithAnimation(): Boolean = true
+//
+//    override fun close(callback: () -> Unit) {
+//        view?.startBackgroundColorAnimation(
+//            ContextCompat.getColor(requireContext(), R.color.ic_launcher_background),
+//            ContextCompat.getColor(requireContext(), R.color.purple_500),
+//            1000
+//        )?.start()
+//        view?.exitCircularReveal(
+//            posX!!,
+//            posY!!,
+//            null
+//        ) {
+//            view?.visibility = View.GONE
+//            navigator().deleteFragment(this)
+//        }
+//    }
 
     override fun getCustomAction(): CustomAction {
         return CustomAction(
@@ -205,11 +198,15 @@ class CreateNoteFragment :
         private val ARG_OPTIONS = "ARG_OPTIONS"
         private val KEY_OPTIONS = "KEY_OPTIONS"
 
-        fun newInstance(options: Options): CreateNoteFragment {
-            val args = Bundle()
-            args.putParcelable(ARG_OPTIONS, options)
+//        fun newInstance(options: Options): CreateNoteFragment {
+//            val args = Bundle()
+//            args.putParcelable(ARG_OPTIONS, options)
+//            val fragment = CreateNoteFragment()
+//            fragment.arguments = args
+//            return fragment
+//        }
+        fun newInstance(): CreateNoteFragment {
             val fragment = CreateNoteFragment()
-            fragment.arguments = args
             return fragment
         }
     }
