@@ -59,6 +59,7 @@
             android:enabled="true" />
 
         <activity
+            android:windowSoftInputMode="adjustPan"
             android:name="ru.jeinmentalist.mail.mnemolist.MainActivity"
             android:exported="true">
             <intent-filter>

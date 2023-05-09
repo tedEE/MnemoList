@@ -21,11 +21,9 @@ import ru.jeinmentalist.mail.domain.profile.Profile
 import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mentalist.databinding.FragmentProfileListBinding
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
+import ru.jeinmentalist.mail.mnemolist.UI.utilits.showToast
 import ru.jeinmentalist.mail.mnemolist.base.BaseFragment
-import ru.jeinmentalist.mail.mnemolist.contract.HasCustomTitle
-import ru.jeinmentalist.mail.mnemolist.contract.IOnBackPress
-import ru.jeinmentalist.mail.mnemolist.contract.Options
-import ru.jeinmentalist.mail.mnemolist.contract.navigator
+import ru.jeinmentalist.mail.mnemolist.contract.*
 import ru.jeinmentalist.mail.mnemolist.utils.exitReveal
 
 
@@ -33,6 +31,7 @@ import ru.jeinmentalist.mail.mnemolist.utils.exitReveal
 class ProfileListFragment :
     HasCustomTitle,
     IOnBackPress,
+    HasFabClickListener,
     BaseFragment<FragmentProfileListBinding>(FragmentProfileListBinding::inflate) {
 
     private var profileListAdapter = ProfileListAdapter()
@@ -255,6 +254,10 @@ class ProfileListFragment :
 //            block.invoke()
 //            showFab()
 //        }
+    }
+
+    override fun onFabClick() {
+        showToast(requireContext(), "список профилей")
     }
 
 //    private fun deleteFabMenuFragment(fr: Fragment) {

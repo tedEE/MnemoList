@@ -20,9 +20,9 @@ import java.util.*
 
 
 @AndroidEntryPoint
-class CreateProfileFragment : BaseFragment<FragmentCreateProfileBinding>(
-    FragmentCreateProfileBinding::inflate
-), HasCustomAction{
+class CreateProfileFragment : BaseFragment<FragmentCreateProfileBinding>(FragmentCreateProfileBinding::inflate),
+    HasCustomAction,
+    HasFabClickListener{
 
     private val createProfileViewModel: CreateProfileViewModel by viewModels()
     private var timestampExecutionTimeText: Long? = null
@@ -99,6 +99,10 @@ class CreateProfileFragment : BaseFragment<FragmentCreateProfileBinding>(
                 onConfirmPressed()
             }
         )
+    }
+
+    override fun onFabClick() {
+        showToast(requireContext(), "создать профиль")
     }
 
     private fun onConfirmPressed() {

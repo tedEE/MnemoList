@@ -15,8 +15,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.LifecycleOwner
 import dagger.hilt.android.AndroidEntryPoint
-import np.com.susanthapa.curved_bottom_navigation.CbnMenuItem
-import np.com.susanthapa.curved_bottom_navigation.CurvedBottomNavigationView
 import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mentalist.databinding.ActivityMainBinding
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
@@ -27,19 +25,21 @@ import ru.jeinmentalist.mail.mnemolist.screens.noteList.NoteListFragment
 import ru.jeinmentalist.mail.mnemolist.contract.Options
 import ru.jeinmentalist.mail.mnemolist.screens.ListAllNote.ListAllNoteFragment
 import ru.jeinmentalist.mail.mnemolist.screens.parentMenuFragment.ParentMenuFragment
-import ru.jeinmentalist.mail.mnemolist.screens.profilelist.ProfileListFragment
 import ru.jeinmentalist.mail.mnemolist.utils.ExitWithAnimation
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), Navigator {
+class MainActivity : AppCompatActivity(),
+    Navigator,
+    CustomTitleCreator,
+    CustomActionCreator {
 
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
-    val fragmentListener = object : FragmentManager.FragmentLifecycleCallbacks() {
+    private val fragmentListener = object : FragmentManager.FragmentLifecycleCallbacks() {
 
         override fun onFragmentViewDestroyed(fm: FragmentManager, f: Fragment) {
             super.onFragmentViewDestroyed(fm, f)
-            updateUI()
+//            updateUI()
         }
 
         override fun onFragmentViewCreated(
@@ -50,11 +50,11 @@ class MainActivity : AppCompatActivity(), Navigator {
         ) {
             super.onFragmentViewCreated(fm, f, v, savedInstanceState)
             showLog(f.toString())
-            updateUI()
+//            updateUI()
         }
     }
 
-    val currentFragment: Fragment
+    private val currentFragment: Fragment
         get() = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,10 +71,6 @@ class MainActivity : AppCompatActivity(), Navigator {
                 .beginTransaction()
                 .replace(R.id.nav_host_fragment, ParentMenuFragment())
                 .commit()
-        }
-
-        fun CurvedBottomNavigationView.selectItemMenu(){
-            
         }
     }
 
@@ -120,32 +116,36 @@ class MainActivity : AppCompatActivity(), Navigator {
      *                                      дополнительные методы
      */
 
-    private fun updateUI() {
-        val fragment = currentFragment
-        if (fragment is HasCustomTitle) {
-            title = getString(fragment.getTitleRes())
-//            binding.toolbar.title = getString(fragment.getTitleRes())
-        } else {
-            binding.toolbar.title = getString(R.string.app_name)
-        }
+//    private fun updateUI() {
+//        val fragment = currentFragment
+//        if (fragment is HasCustomTitle) {
+//            title = getString(fragment.getTitleRes())
+////            binding.toolbar.title = getString(fragment.getTitleRes())
+//        } else {
+//            binding.toolbar.title = getString(R.string.app_name)
+//        }
+//
+//        if (supportFragmentManager.backStackEntryCount > 0) {
+//            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//            supportActionBar?.setDisplayShowHomeEnabled(true)
+//        } else {
+//            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+//            supportActionBar?.setDisplayShowHomeEnabled(false)
+//        }
+//
+//        if (fragment is HasCustomAction) {
+//            createCustomToolbarAction(fragment.getCustomAction())
+//        } else {
+//            binding.toolbar.menu.clear()
+//        }
+//    }
 
-        if (supportFragmentManager.backStackEntryCount > 0) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setDisplayShowHomeEnabled(true)
-        } else {
-            supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            supportActionBar?.setDisplayShowHomeEnabled(false)
-        }
-
-        if (fragment is HasCustomAction) {
-            createCustomToolbarAction(fragment.getCustomAction())
-        } else {
-            binding.toolbar.menu.clear()
-        }
+    override fun updateTitle(titleRes: Int){
+        title = getString(titleRes)
     }
 
-    private fun createCustomToolbarAction(action: CustomAction) {
-        binding.toolbar.menu.clear() // clearing old action if it exists before assigning a new one
+    override fun createCustomToolbarAction(action: CustomAction) {
+        clearToolbarAction()  // clearing old action if it exists before assigning a new one
 
         val iconDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(this, action.iconRes)!!)
         iconDrawable.setTint(Color.WHITE)
@@ -157,6 +157,10 @@ class MainActivity : AppCompatActivity(), Navigator {
             action.onCustomAction.run()
             return@setOnMenuItemClickListener true
         }
+    }
+
+    override fun clearToolbarAction() {
+        binding.toolbar.menu.clear()
     }
 
     // добавить private

@@ -17,6 +17,7 @@ import ru.jeinmentalist.mail.domain.profile.Profile
 import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mentalist.databinding.FragmentCreateNoteBinding
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
+import ru.jeinmentalist.mail.mnemolist.UI.utilits.showToast
 import ru.jeinmentalist.mail.mnemolist.background.reminder.IReminderManager
 import ru.jeinmentalist.mail.mnemolist.base.BaseFragment
 import ru.jeinmentalist.mail.mnemolist.contract.*
@@ -31,7 +32,8 @@ import javax.inject.Inject
 class CreateNoteFragment :
     BaseFragment<FragmentCreateNoteBinding>(FragmentCreateNoteBinding::inflate),
     HasCustomTitle,
-    HasCustomAction {
+    HasCustomAction,
+    HasFabClickListener{
 
 //    private lateinit var mOptions: Options
     @Inject lateinit var remMan: IReminderManager
@@ -192,6 +194,10 @@ class CreateNoteFragment :
         } else {
             successfulСallback()
         }
+    }
+
+    override fun onFabClick() {
+        showToast(requireContext(), "создать уведомление")
     }
 
     companion object {
