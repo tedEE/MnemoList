@@ -128,6 +128,6 @@ class NotificationUtil(val context: Context) {
     private fun createBigPicStyle(image: Bitmap): NotificationCompat.BigPictureStyle {
         return NotificationCompat.BigPictureStyle()
             .bigPicture(image)
-            .bigLargeIcon(null)
+//            .bigLargeIcon(null)
     }
 }
