@@ -31,6 +31,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CreateNoteFragment :
     BaseFragment<FragmentCreateNoteBinding>(FragmentCreateNoteBinding::inflate),
+
     HasCustomTitle,
     HasCustomAction,
     HasFabClickListener{
@@ -127,7 +128,7 @@ class CreateNoteFragment :
 
     fun permisens(){
         if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
         }
     }
 
