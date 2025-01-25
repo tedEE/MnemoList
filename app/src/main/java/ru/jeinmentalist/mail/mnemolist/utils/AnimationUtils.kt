@@ -1,15 +1,13 @@
 package ru.jeinmentalist.mail.mnemolist.utils
 
-import android.animation.*
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
 import android.view.View
 import android.view.ViewAnimationUtils
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat
-import ru.jeinmentalist.mail.mentalist.R
-import kotlin.math.hypot
+import java.lang.Math.hypot
 
 
 /**
@@ -52,19 +50,20 @@ fun View.startCircularReveal(x: Int, y: Int, animator: ObjectAnimator?,
                     interpolator = DecelerateInterpolator(2f)
                     duration = durationAnim
                     addListener(object : Animator.AnimatorListener{
-                        override fun onAnimationStart(animation: Animator?) {
+
+                        override fun onAnimationStart(animation: Animator) {
                             animationStart?.invoke()
                         }
 
-                        override fun onAnimationEnd(animation: Animator?) {
+                        override fun onAnimationEnd(animation: Animator) {
                             animationEnd?.invoke()
                         }
 
-                        override fun onAnimationCancel(animation: Animator?) {
+                        override fun onAnimationCancel(animation: Animator) {
                             animationCancel?.invoke()
                         }
 
-                        override fun onAnimationRepeat(animation: Animator?) {
+                        override fun onAnimationRepeat(animation: Animator) {
                             animationRepeat?.invoke()
                         }
 
@@ -93,11 +92,12 @@ fun View.exitCircularReveal(
         duration = 500
         interpolator = DecelerateInterpolator(1f)
         addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 block()
                 animator?.start()
                 super.onAnimationEnd(animation)
             }
+
         })
         start()
     }

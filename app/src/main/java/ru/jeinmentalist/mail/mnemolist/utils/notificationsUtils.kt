@@ -52,7 +52,7 @@ fun sendNotification(
 
     val bigPicStyle = NotificationCompat.BigPictureStyle()
         .bigPicture(image)
-        .bigLargeIcon(null)
+//        .bigLargeIcon(null)
 
     val remember =
         BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_brain_1)
@@ -147,7 +147,7 @@ fun sendBigPicNotification(
 
     val bigPicStyle = NotificationCompat.BigPictureStyle()
         .bigPicture(bitmap)
-        .bigLargeIcon(null)
+//        .bigLargeIcon(null)
 
 
     val remember =
@@ -232,7 +232,7 @@ fun sendLastNotification(applicationContext: Context) {
         BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_remember)
 
     val bigPicStyle = NotificationCompat.BigPictureStyle()
-        .bigPicture(null)
+//        .bigPicture(null)
         .bigLargeIcon(remember)
 
     val builder = NotificationCompat.Builder(

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="24dp"
+            android:height="24dp"
+            android:viewportWidth="960"
+            android:viewportHeight="960">
+            <group
+                android:name="group"
+                android:pivotX="490"
+                android:pivotY="475">
+                <path
+                    android:name="path"
+                    android:pathData="M 261 434 L 481 80 L 701 434 L 261 434 Z M 706 880 Q 632 880 582 830 Q 532 780 532 706 Q 532 632 582 582 Q 632 532 706 532 Q 780 532 830 582 Q 880 632 880 706 Q 880 780 830 830 Q 780 880 706 880 Z M 120 855 L 120 551 L 424 551 L 424 855 L 120 855 Z M 706.085 820 Q 754 820 787 786.916 Q 820 753.831 820 705.916 Q 820 658 786.916 625 Q 753.831 592 705.915 592 Q 658 592 625 625.084 Q 592 658.169 592 706.084 Q 592 754 625.084 787 Q 658.169 820 706.085 820 Z M 180 795 L 364 795 L 364 611 L 180 611 L 180 795 Z M 369 374 L 593 374 L 481 193 L 369 374 Z M 481 374 Z M 364 611 Z M 706 706 Z"
+                    android:fillColor="#ffffff"
+                    android:strokeWidth="1"/>
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="path">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:duration="300"
+                android:valueFrom="M 701 434 L 638.143 434 L 622.429 434 L 606.714 434 L 591 434 L 575.286 434 L 323.857 434 L 261 434 L 261 434 L 305.87 361.799 L 367.086 263.298 L 407.667 198 L 444.333 139 L 456.556 119.333 L 468.778 99.667 L 481 80 L 532.49 162.853 L 561.023 208.764 L 591 257 L 614.351 294.573 L 652.425 355.838 L 701 434 M 532 706 Q 532 632 582 582 Q 632 532 706 532 Q 780 532 830 582 Q 880 632 880 706 Q 880 780 830 830 Q 780 880 706 880 L 706 880 Q 632 880 582 830 Q 532 780 532 706 M 120 855 L 120 551 L 424 551 L 424 855 L 120 855 L 120 855 M 820 705.916 Q 820 658 786.916 625 Q 753.831 592 705.915 592 Q 658 592 625 625.084 Q 592 658.169 592 706.084 Q 592 754 625.084 787 Q 658.169 820 706.085 820 L 706.085 820 Q 754 820 787 786.916 Q 820 753.831 820 705.916 M 180 795 L 364 795 L 364 611 L 180 611 L 180 795 L 180 795 M 481 193 L 369 374 L 369 374 L 593 374 L 481 193 M 481 374 L 481 374 M 364 611 L 364 611 M 706 706 L 706 706"
+                android:valueTo="M 450 760 L 450 760 L 510 760 L 510 510 L 760 510 L 760 450 L 510 450 L 510 387.5 L 510 325 L 510 262.5 L 510 200 L 498 200 L 486 200 L 474 200 L 462 200 L 450 200 L 450 325 L 450 450 L 200 450 L 200 510 L 450 510 L 450 760 M 706 706 Q 706 706 706 706 Q 706 706 706 706 Q 706 706 706 706 Q 706 706 706 706 Q 706 706 706 706 Q 706 706 706 706 L 706 706 Q 706 706 706 706 Q 706 706 706 706 M 272 703 L 272 703 L 272 703 L 272 703 L 272 703 L 272 703 M 706 706 Q 706 706 706 706 Q 706 706 706 706 Q 706 706 706 706 Q 706 706 706 706 Q 706 706 706 706 Q 706 706 706 706 L 706 706 Q 706 706 706 706 Q 706 706 706 706 M 272 703 L 272 703 L 272 703 L 272 703 L 272 703 L 272 703 M 481.418 311.074 L 481.418 311.074 L 481.418 311.074 L 481.418 311.074 L 481.418 311.074 M 481 374 L 481 374 M 364 611 L 364 611 M 706 706 L 706 706"
+                android:valueType="pathType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+    <target android:name="group">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="rotation"
+                android:duration="300"
+                android:valueFrom="0"
+                android:valueTo="360"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+</animated-vector>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="960dp"
+            android:height="960dp"
+            android:viewportWidth="960"
+            android:viewportHeight="960">
+            <group
+                android:name="group"
+                android:pivotX="474"
+                android:pivotY="465">
+                <path
+                    android:name="path"
+                    android:pathData="M 286 671 L 346 671 L 601 416 L 542 355 L 286 611 L 286 671 Z M 619 398 L 658 359 Q 665 352 665.5 343.5 Q 666 335 658 327 L 629 299 Q 621 291 613 291.5 Q 605 292 598 299 L 560 337 L 619 398 Z M 180 840 Q 155.25 840 137.625 822.375 Q 120 804.75 120 780 L 120 180 Q 120 155.25 137.625 137.625 Q 155.25 120 180 120 L 385 120 Q 390 85 417 62.5 Q 444 40 480 40 Q 516 40 543 62.5 Q 570 85 575 120 L 780 120 Q 804.75 120 822.375 137.625 Q 840 155.25 840 180 L 840 780 Q 840 804.75 822.375 822.375 Q 804.75 840 780 840 L 180 840 Z M 180 780 L 780 780 L 780 180 L 180 180 L 180 780 Z M 480 163 Q 494 163 504.5 152.5 Q 515 142 515 128 Q 515 114 504.5 103.5 Q 494 93 480 93 Q 466 93 455.5 103.5 Q 445 114 445 128 Q 445 142 455.5 152.5 Q 466 163 480 163 Z M 180 780 L 180 180 L 180 780 Z"
+                    android:fillColor="#000"
+                    android:strokeWidth="1"/>
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="path">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:duration="300"
+                android:valueFrom="M 382.429 634.571 L 460.712 556.288 L 544.606 472.394 L 601 416 L 601 416 L 542 355 L 493.102 403.898 L 414 483 L 329.562 567.438 L 286 611 L 286 671 L 286 671 L 346 671 L 382.429 634.571 M 658 327 L 629 299 Q 621 291 613 291.5 Q 605 292 598 299 L 560 337 L 619 398 L 619 398 L 658 359 Q 665 352 665.5 343.5 Q 666 335 658 327 M 575 120 Q 570 85 543 62.5 Q 516 40 480 40 Q 444 40 417 62.5 Q 390 85 385 120 L 180 120 Q 155.25 120 137.625 137.625 Q 120 155.25 120 180 L 120 780 Q 120 804.75 137.625 822.375 Q 155.25 840 180 840 L 180 840 L 780 840 Q 804.75 840 822.375 822.375 Q 840 804.75 840 780 L 840 180 Q 840 155.25 822.375 137.625 Q 804.75 120 780 120 L 575 120 M 180 780 L 180 180 L 780 180 L 780 780 L 180 780 L 180 780 M 455.5 152.5 Q 445 142 445 128 Q 445 114 455.5 103.5 Q 466 93 480 93 Q 494 93 504.5 103.5 Q 515 114 515 128 Q 515 142 504.5 152.5 Q 494 163 480 163 L 480 163 Q 466 163 455.5 152.5 M 180 180 L 180 780 L 180 780 L 180 180"
+                android:valueTo="M 200 606 L 200 546 L 450 546 L 450 296 L 510 296 L 510 546 L 760 546 L 760 606 L 510 606 L 510 856 L 450 856 L 450 856 L 450 606 L 200 606 M 618.107 342.189 L 618.107 342.189 Q 618.107 342.189 618.107 342.189 Q 618.107 342.189 618.107 342.189 L 618.107 342.189 L 618.107 342.189 L 618.107 342.189 L 618.107 342.189 Q 618.107 342.189 618.107 342.189 Q 618.107 342.189 618.107 342.189 M 480 472.154 Q 480 472.154 480 472.154 Q 480 472.154 480 472.154 Q 480 472.154 480 472.154 Q 480 472.154 480 472.154 L 480 472.154 Q 480 472.154 480 472.154 Q 480 472.154 480 472.154 L 480 472.154 Q 480 472.154 480 472.154 Q 480 472.154 480 472.154 L 480 472.154 L 480 472.154 Q 480 472.154 480 472.154 Q 480 472.154 480 472.154 L 480 472.154 Q 480 472.154 480 472.154 Q 480 472.154 480 472.154 L 480 472.154 M 480 480 L 480 480 L 480 480 L 480 480 L 480 480 L 480 480 M 480 128 Q 480 128 480 128 Q 480 128 480 128 Q 480 128 480 128 Q 480 128 480 128 Q 480 128 480 128 Q 480 128 480 128 Q 480 128 480 128 L 480 128 Q 480 128 480 128 M 180 180 L 180 180 L 180 180 L 180 180"
+                android:valueType="pathType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+    <target android:name="group">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="rotation"
+                android:duration="300"
+                android:valueFrom="0"
+                android:valueTo="360"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+</animated-vector>

@@ -45,7 +45,7 @@ class FabMenuFragment : BaseFragment<FragmentFabMenuBinding>(FragmentFabMenuBind
         )
         view.startCircularReveal(posX!!, posY!!, animator)
 
-        binding.createCart.setOnClickListener{
+        binding.createCart.setOnClickListener {
             (parentFragment as FirstFragment).createCarts()
         }
 
@@ -57,8 +57,8 @@ class FabMenuFragment : BaseFragment<FragmentFabMenuBinding>(FragmentFabMenuBind
         }
     }
 
-    override fun close(callback: ()->Unit) {
-        if (checkStatus()){
+    override fun close(callback: () -> Unit) {
+        if (checkStatus()) {
             view?.exitCircularReveal(posX!!, posY!!) {
                 binding.root.removeAllViews()
                 view?.visibility = View.GONE
@@ -84,3 +84,4 @@ class FabMenuFragment : BaseFragment<FragmentFabMenuBinding>(FragmentFabMenuBind
         }
     }
 }
+   

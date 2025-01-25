@@ -1,6 +1,5 @@
 package ru.jeinmentalist.mail.mnemolist.screens.profilelist
 
-import android.animation.LayoutTransition
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.jeinmentalist.mail.domain.profile.Profile
 import ru.jeinmentalist.mail.mentalist.R
-import java.lang.RuntimeException
 
 class ProfileListAdapter : ListAdapter<Profile, ProfileListAdapter.ProfileViewHolder>(ProfileItemDiffCallback()) {
     // так как обработчика два можно заменить лямбды на интерфейс

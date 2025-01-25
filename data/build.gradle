@@ -3,17 +3,16 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     // сперва установить зависимости в dependencies потом подключать этот плагин
-    id 'dagger.hilt.android.plugin'
+    id 'com.google.dagger.hilt.android'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
-    compileSdk 31
+    compileSdk 34
 
     defaultConfig {
         minSdk 23
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
@@ -30,32 +29,54 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
+    }
+    namespace 'ru.jeinmentalist.mail.data'
+
+    kapt {
+        correctErrorTypes true
     }
 }
 
+
+
 dependencies {
     implementation project(path: ':domain')
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.9.0"))
+    implementation 'androidx.core:core-ktx:1.12.0'
     // room
-    def room_version = "2.4.1"
+    def room_version = "2.6.1"
     implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     // Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$room_version"
+
     //Hilt
-    def hilt_version = '2.41'
+    def hilt_version = '2.49'
     implementation("com.google.dagger:hilt-android:$hilt_version")
     kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
+
+    // Livecycle
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
+
 
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
-    testImplementation 'junit:junit:4.+'
-    kapt "org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.4.2"
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    testImplementation 'junit:junit:4.13.2'
+//    возможно надо удалить
+    kapt "org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.5.0"
+
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }

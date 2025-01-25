@@ -10,33 +10,28 @@ import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
+import np.com.susanthapa.curved_bottom_navigation.CbnMenuItem
 import ru.jeinmentalist.mail.domain.profile.Profile
 import ru.jeinmentalist.mail.mentalist.R
 import ru.jeinmentalist.mail.mentalist.databinding.FragmentProfileListBinding
-import ru.jeinmentalist.mail.mnemolist.MainActivity
 import ru.jeinmentalist.mail.mnemolist.UI.utilits.showLog
+import ru.jeinmentalist.mail.mnemolist.UI.utilits.showToast
 import ru.jeinmentalist.mail.mnemolist.base.BaseFragment
 import ru.jeinmentalist.mail.mnemolist.contract.*
-import ru.jeinmentalist.mail.mnemolist.screens.FabMenuFragment
-import ru.jeinmentalist.mail.mnemolist.screens.checkeNoteAlarm.CheckAlarmFragment
-import ru.jeinmentalist.mail.mnemolist.utils.ExitWithAnimation
-import ru.jeinmentalist.mail.mnemolist.utils.enterReveal
 import ru.jeinmentalist.mail.mnemolist.utils.exitReveal
-import ru.jeinmentalist.mail.mnemolist.utils.findLocationOfCenterOnTheScreen
 
 
 @AndroidEntryPoint
 class ProfileListFragment :
     HasCustomTitle,
-    FirstFragment,
     IOnBackPress,
+    HasFabClickListener,
     BaseFragment<FragmentProfileListBinding>(FragmentProfileListBinding::inflate) {
 
     private var profileListAdapter = ProfileListAdapter()
@@ -44,11 +39,10 @@ class ProfileListFragment :
 
     //    var isFabMenuOpen = false
     private val mProfileListViewModel: ProfileListViewModel by viewModels()
-    private var mPositionsFab: IntArray? = null
-    var fabOpen = false
+//    private var mPositionsFab: IntArray? = null
+//    var fabOpen = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.bottomNavigationView.background = null
         setupRecyclerView()
         onBackPressed()
 //        dischargeFab()
@@ -59,23 +53,9 @@ class ProfileListFragment :
         })
 
 
-//        binding.fabMenuItem1.setOnClickListener {
-//            isFabMenuOpen = false
-////            closeFabMenu(300)
+//        binding.fab.setOnClickListener {
+//            showRevealFabMenu(it)
 //        }
-//        binding.fabMenuItem2.setOnClickListener {
-//            isFabMenuOpen = false
-////            navigator().showCreateProfileFragment()
-//        }
-//        binding.fabMenuItem3.setOnClickListener {
-//            isFabMenuOpen = false
-//            navigator().showCreateNoteFragment(Options(mProfileList))
-//
-//        }
-
-        binding.fab.setOnClickListener {
-            showRevealFabMenu(it)
-        }
     }
 
     private fun setupRecyclerViewForCard(view: View): ProfileItemAdapter {
@@ -189,18 +169,18 @@ class ProfileListFragment :
 
     private fun showRevealFabMenu(view: View) {
         view.exitReveal {
-            fabOpen = true
-            binding.childFragmentContainer.visibility = View.VISIBLE
-            binding.childFragmentContainer.layoutParams
-            val positions = view.findLocationOfCenterOnTheScreen()
-            mPositionsFab = positions
-            childFragmentManager.beginTransaction()
-                .add(
-                    R.id.child_fragment_container,
-                    FabMenuFragment.newInstance(Options(mProfileList), positions)
-                )
-                .addToBackStack(null)
-                .commit()
+//            fabOpen = true
+//            binding.childFragmentContainer.visibility = View.VISIBLE
+//            binding.childFragmentContainer.layoutParams
+//            val positions = view.findLocationOfCenterOnTheScreen()
+//            mPositionsFab = positions
+//            childFragmentManager.beginTransaction()
+//                .add(
+//                    R.id.child_fragment_container,
+//                    FabMenuFragment.newInstance(Options(mProfileList), positions)
+//                )
+//                .addToBackStack(null)
+//                .commit()
         }
     }
 
@@ -219,65 +199,70 @@ class ProfileListFragment :
         profileListAdapter.onProfileButtonDeleteClickListener = null
     }
 
-    private fun showFab() {
-        binding.fab.enterReveal()
-    }
+//    private fun showFab() {
+//        binding.fab.enterReveal()
+//    }
 
     /**
      * реализация методов интерфейса FirstFragment
      */
 
-    override fun createCarts() {
-        closeMenu {
-        }
-    }
+//    override fun createCarts() {
+//        closeMenu {
+//        }
+//    }
 
-    override fun createNote() {
-        closeMenu {
-            navigator().showCreateNoteFragment(
-                Options(
-//                    volume = mProfileList,
-                    volume = listOf(),
-                    openParams = mPositionsFab ?: intArrayOf()
-                )
-            )
-        }
-    }
-
-    override fun createProfile() {
-        closeMenu {
-            navigator().showCreateProfileFragment(
-                Options(
-                    volume = listOf(),
-                    openParams = mPositionsFab ?: intArrayOf()
-                )
-            )
-        }
-    }
+//    override fun createNote() {
+//        closeMenu {
+//            navigator().showCreateNoteFragment(
+//                Options(
+////                    volume = mProfileList,
+//                    volume = listOf(),
+//                    openParams = mPositionsFab ?: intArrayOf()
+//                )
+//            )
+//        }
+//    }
+//
+//    override fun createProfile() {
+//        closeMenu {
+//            navigator().showCreateProfileFragment(
+//                Options(
+//                    volume = listOf(),
+//                    openParams = mPositionsFab ?: intArrayOf()
+//                )
+//            )
+//        }
+//    }
 
     override fun onBackPressed(): Boolean {
-        return if (fabOpen) {
-            closeMenu()
-            true
-        } else {
-            false
-        }
+//        return if (fabOpen) {
+//            closeMenu()
+//            true
+//        } else {
+//            false
+//        }
+        return true
     }
 
     private fun closeMenu(block: () -> Unit = {}) {
-        val fabFragment = childFragmentManager.findFragmentById(R.id.child_fragment_container)
-        (fabFragment as? ExitWithAnimation)?.close {
-            fabOpen = false
-            binding.childFragmentContainer.visibility = View.GONE
-            deleteFabMenuFragment(fabFragment)
-            block.invoke()
-            showFab()
-        }
+//        val fabFragment = childFragmentManager.findFragmentById(R.id.child_fragment_container)
+//        (fabFragment as? ExitWithAnimation)?.close {
+//            fabOpen = false
+//            binding.childFragmentContainer.visibility = View.GONE
+//            deleteFabMenuFragment(fabFragment)
+//            block.invoke()
+//            showFab()
+//        }
     }
 
-    private fun deleteFabMenuFragment(fr: Fragment) {
-        childFragmentManager.beginTransaction().remove(fr).commit()
-//        childFragmentManager.executePendingTransactions()
-        childFragmentManager.popBackStack()
+    override fun onFabClick() {
+        showToast(requireContext(), "список профилей")
     }
+
+//    private fun deleteFabMenuFragment(fr: Fragment) {
+//        childFragmentManager.beginTransaction().remove(fr).commit()
+////        childFragmentManager.executePendingTransactions()
+//        childFragmentManager.popBackStack()
+//    }
 }

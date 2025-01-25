@@ -1,6 +1,8 @@
 package ru.jeinmentalist.mail.mnemolist
 
+import android.app.Activity
 import android.app.Application
+import android.os.Bundle
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
@@ -32,8 +34,10 @@ class App : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+
     override fun onCreate() {
         super.onCreate()
+
         createNotificationChannel(applicationContext, CHANNEL_ID, CHANNEL_NAME)
     }
 

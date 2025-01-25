@@ -40,7 +40,7 @@ class EnterNameProfileDialogFragment : DialogFragment() {
                     return@setOnClickListener
                 }
 //                navigator().publishResult<Options>(Options(enteredText))
-                navigator().showCreateProfileFragment(Options(listOf(), intArrayOf()))
+                navigator().showCreateProfileFragment()
 //                parentFragmentManager.setFragmentResult(requestKey, bundleOf(KEY_VOLUME_RESPONSE to volume))
                 dismiss()
             }

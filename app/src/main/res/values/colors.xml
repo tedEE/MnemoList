@@ -10,4 +10,26 @@
     <color name="background_menu_from">#00FFFFFF</color>
     <color name="background_menu_to">#80FFFFFF</color>
     <color name="deep_taupe">#8B8589</color>
+
+<!--    цвета взяты с этого сайта https://www.materialpalette.com/grey/blue-grey-->
+<!--    <color name="PRIMARY_COLOR">#9E9E9E</color>-->
+<!--    <color name="LIGHT_PRIMARY_COLOR">#F5F5F5</color>-->
+<!--    <color name="DARK_PRIMARY_COLOR">#616161</color>-->
+<!--    <color name="TEXT_ICONS">#212121</color>-->
+<!--    <color name="ACCENT_COLORS">#607D8B</color>-->
+<!--    <color name="PRIMARY_TEXT">#212121</color>-->
+<!--    <color name="SECONDARY_TEXT">#757575</color>-->
+<!--    <color name="DIVIDER_COLOR">#BDBDBD</color>-->
+
+<!--    цвета с этого сайта https://m3.material.io/theme-builder#/custom-->
+    <color name="Primary">#9c413f</color>
+    <color name="On_Primary">#ffffff</color>
+    <color name="Secondary">#775654</color>
+    <color name="On_Secondary">#ffffff</color>
+    <color name="Error">#ba1a1a</color>
+    <color name="Primary_Container">#410005</color>
+    <color name="Secondary_Container">#2c1514</color>
+    <color name="DIVIDER_COLOR">#BDBDBD</color>
+
+
 </resources>
