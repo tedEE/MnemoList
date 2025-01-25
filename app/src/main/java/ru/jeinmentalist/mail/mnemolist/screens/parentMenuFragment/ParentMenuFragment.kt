@@ -1,6 +1,7 @@
 package ru.jeinmentalist.mail.mnemolist.screens.parentMenuFragment
 
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -14,6 +15,7 @@ import ru.jeinmentalist.mail.mnemolist.contract.*
 import ru.jeinmentalist.mail.mnemolist.screens.createNote.CreateNoteFragment
 import ru.jeinmentalist.mail.mnemolist.screens.createProfile.CreateProfileFragment
 import ru.jeinmentalist.mail.mnemolist.screens.profilelist.ProfileListFragment
+import ru.jeinmentalist.mail.mnemolist.utils.setFabTouchListener
 
 class ParentMenuFragment :
     BaseFragment<FragmentParentMenuBinding>(FragmentParentMenuBinding::inflate),
@@ -119,9 +121,18 @@ class ParentMenuFragment :
 
         binding.navView.setMenuItems(mMenuItems, currentScrins)
 
-        binding.navView.setOnClickListener{
-            val fabClickListener = (currentFragment as HasFabClickListener)
-            fabClickListener.onFabClick()
+        binding.navView.setFabTouchListener { view, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    val fabClickListener = (currentFragment as HasFabClickListener)
+                    fabClickListener.onFabClick()
+                    true
+                }
+                MotionEvent.ACTION_UP -> {
+                    true
+                }
+                else -> false
+            }
         }
 
         binding.navView.setOnMenuItemClickListener { cbnMenuItem, index ->
